@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <profile name="sbt 1" modules="bismuth_2855,all" />
+    <profile name="sbt 2" modules="core,tests">
+      <option name="higherKinds" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="uncheckedWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-unused" />
+        <parameter value="-Ywarn-unused-import" />
+        <parameter value="-Ywarn-value-discard" />
+      </parameters>
+    </profile>
+  </component>
+</project>
