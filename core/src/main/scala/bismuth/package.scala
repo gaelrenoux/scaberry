@@ -1,8 +1,10 @@
-import bismuth.`macro`.FieldsMacro
-import com.sun.tools.javac.code.TypeTag
+import bismuth.`macro`.FieldsMacroImpl
+import bismuth.core.Fields
+
+import scala.language.experimental.macros
 
 package object bismuth {
 
-  def fields[A](implicit a: TypeTag[A]) = macro FieldsMacro.impl
+  def constructorFields[Source]: Fields[Source] = macro FieldsMacroImpl.constructorFields[Source]
 
 }

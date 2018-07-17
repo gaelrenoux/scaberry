@@ -1,15 +1,13 @@
 package bismuth.core
 
-import scala.reflect.api._
+import scala.reflect.ClassTag
+import scala.reflect.runtime.{universe => ru}
 
+trait Field[-Source, Type] {
 
-case class Field[Source, Type](
-                                name: String,
-                                sourceType: TypeTag[Source],
-                                fieldType: TypeTag[Type]
-                              ) {
+  val name: String
 
-  def apply[Target <: Source](target: Target): Applyer[Target, Type] = ???
+  //TODO have compile-time stuff instead of runtime, or move it
+  def apply[Target <: Source : ClassTag : ru.TypeTag](target: Target): FieldApplication[Target, Type]
 
 }
-
