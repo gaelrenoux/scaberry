@@ -17,21 +17,23 @@ class FieldsMacroImpl(val c: whitebox.Context) {
     }
   }
 
+  def constructorFields[Source: c.WeakTypeTag]: c.Expr[Fields[Source]] = withTerms { srcTpe =>
+    val constructors = srcTpe.decl(c.universe.termNames.CONSTRUCTOR).alternatives.map(_.asMethod)
+    val srcConstructor = constructors.find(_.isPrimaryConstructor).get
+    srcConstructor.paramLists.flatten.map(_.asTerm)
+  }
 
-  def constructorFields[Source: c.WeakTypeTag]: c.Expr[Fields[Source]] = {
+  def valsFields[Source: c.WeakTypeTag]: c.Expr[Fields[Source]] = withTerms { srcTpe =>
+    val publics = srcTpe.members.map(_.asTerm).filter(s => s.isVal && s.isPublic)
+
+    publics
+  }
+
+  private def withTerms[Source: c.WeakTypeTag](getTerms: Type => Iterable[TermSymbol]) = {
     val srcTag = implicitly[c.WeakTypeTag[Source]]
     val srcTpe = srcTag.tpe.dealias
-    val srcConstructor = srcTpe.decl(c.universe.termNames.CONSTRUCTOR).asMethod
-
-    val allFieldSymbols = srcConstructor.paramLists.flatten.map(_.asTerm)
-    val fieldsContent = allFieldSymbols.map { fieldS =>
-      val name = fieldS.name
-      val nameAsLiteral = Literal(Constant(name.toString))
-      val typ = fieldS.typeSignature
-      q"""
-        val $name: bismuth.core.Field[$srcTpe, $typ] = bismuth.runtime.ReflectField[$srcTpe, $typ]($nameAsLiteral)
-      """
-    }
+    val terms = getTerms(srcTpe)
+    val fieldsContent = terms.map(fieldToTree(_, srcTpe))
 
     val tree =
       q"""
@@ -44,5 +46,16 @@ class FieldsMacroImpl(val c: whitebox.Context) {
     debug(showCode(tree))
     c.Expr[Fields[Source]](tree)
   }
+
+  private def fieldToTree(sField: TermSymbol, srcTpe: Type) = {
+    val name = sField.name
+    val nameAsLiteral = Literal(Constant(name.toString))
+    val typ = sField.typeSignature
+    q"""
+        val $name: bismuth.core.Field[$srcTpe, $typ] =
+          new bismuth.core.Field.Impl[$srcTpe, $typ]($nameAsLiteral, _.$name)
+      """
+  }
+
 
 }
