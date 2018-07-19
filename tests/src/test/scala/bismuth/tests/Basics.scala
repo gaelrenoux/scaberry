@@ -20,7 +20,7 @@ class Basics extends FlatSpec {
 
 
   // TODO fields should not be based on constructor
-  val animalFields = Fields.fromVals[Animal]
+  val animalFields = Fields.fromPublic[Animal]
   val dogFields = Fields.fromConstructor[Dog]
 
   val animalWeight: Field[Animal, Long] = animalFields.weight

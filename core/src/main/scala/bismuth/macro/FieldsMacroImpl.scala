@@ -23,10 +23,16 @@ class FieldsMacroImpl(val c: whitebox.Context) {
     srcConstructor.paramLists.flatten.map(_.asTerm)
   }
 
-  def valsFields[Source: c.WeakTypeTag]: c.Expr[Fields[Source]] = withTerms { srcTpe =>
-    val publics = srcTpe.members.map(_.asTerm).filter(s => s.isVal && s.isPublic)
+  def publicFields[Source: c.WeakTypeTag]: c.Expr[Fields[Source]] = withTerms { srcTpe =>
+    srcTpe.members.map(_.asTerm).filter(s => s.isPublic && isField(s))
+  }
 
-    publics
+  /* Keep only vals and nullary methods */
+  private def isField(s: TermSymbol) = {
+    s.isVal || (s.isMethod && {
+      val sm = s.asMethod
+      sm.paramLists.isEmpty && sm.typeParams.isEmpty
+    })
   }
 
   private def withTerms[Source: c.WeakTypeTag](getTerms: Type => Iterable[TermSymbol]) = {

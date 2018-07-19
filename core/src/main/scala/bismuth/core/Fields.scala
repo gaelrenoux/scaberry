@@ -10,5 +10,5 @@ object Fields {
 
   def fromConstructor[Source]: Fields[Source] = macro FieldsMacroImpl.constructorFields[Source]
 
-  def fromVals[Source]: Fields[Source] = macro FieldsMacroImpl.valsFields[Source]
+  def fromPublic[Source]: Fields[Source] = macro FieldsMacroImpl.publicFields[Source]
 }

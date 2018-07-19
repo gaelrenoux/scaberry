@@ -12,6 +12,9 @@ object Models {
     protected val animate = true
     def otherName: Option[String] = name
     var whatever = 0
+
+    def unary() = 42
+    def parameterized[A] = ???
   }
 
   case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Animal {
@@ -20,6 +23,9 @@ object Models {
 
     def otherOtherName: Option[String] = name
     var whatever2 = 0
+
+    def unary2() = 42
+    def parameterized2[A] = ???
 
     def this(other: Dog) = this(other.color, other.weight, other.name)
   }
