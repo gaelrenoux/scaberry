@@ -14,8 +14,8 @@ object Samples {
 
 
   val personFields = new Fields[Person] {
-    val nameField: Field[Person, String] = new Field.Impl[Person, String]("name", _.name)
-    val ageField: Field[Person, Long] = new Field.Impl[Person, Long]("age", _.age)
+    val nameField: Field[Person, String, Any, Any] = new Field[Person, String, Any, Any]("name", _.name)
+    val ageField: Field[Person, Long, Any, Any] = new Field[Person, Long, Any, Any]("age", _.age)
   }
 
 

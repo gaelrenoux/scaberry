@@ -74,50 +74,50 @@ class FieldsSpec extends FlatSpec with Matchers with Helpers {
   }
 
   "Definitions" should "have the correct class" in {
-    def f : Field[Any, Any] = ??? // to ensuite Field is in the scope
-    "val x: Field[Animal, Option[String]] = animalValFields.name" should compile
-    "val x: Field[Animal, Long] = animalValFields.weight" should compile
-    "val x: Field[Dog, Some[String]] = dogValFields.name" should compile
-    "val x: Field[Dog, Long] = dogValFields.weight" should compile
-    "val x: Field[Dog, String] = dogValFields.owner" should compile
-    "val x: Field[Dog, Some[String]] = dogConstructorFields.name" should compile
-    "val x: Field[Dog, Long] = dogConstructorFields.weight" should compile
+    def f : Field.Readable[Any, Any] = ??? // to ensuite Field is in the scope
+    "val x: Field.Readable[Animal, Option[String]] = animalValFields.name" should compile
+    "val x: Field.Readable[Animal, Long] = animalValFields.weight" should compile
+    "val x: Field.Readable[Dog, Some[String]] = dogValFields.name" should compile
+    "val x: Field.Readable[Dog, Long] = dogValFields.weight" should compile
+    "val x: Field.Readable[Dog, String] = dogValFields.owner" should compile
+    "val x: Field.Readable[Dog, Some[String]] = dogConstructorFields.name" should compile
+    "val x: Field.Readable[Dog, Long] = dogConstructorFields.weight" should compile
   }
 
   they should "carry the correct name" in {
-    force.af(animalValFields.name).name should be("name")
-    force.af(animalValFields.weight).name should be("weight")
-    force.af(animalValFields.otherName).name should be("otherName")
-    force.af(dogValFields.name).name should be("name")
-    force.af(dogValFields.weight).name should be("weight")
-    force.af(dogValFields.owner).name should be("owner")
-    force.af(dogValFields.otherName).name should be("otherName")
-    force.af(dogValFields.otherOtherName).name should be("otherOtherName")
-    force.af(dogConstructorFields.name).name should be("name")
-    force.af(dogConstructorFields.weight).name should be("weight")
+    force.arf(animalValFields.name).name should be("name")
+    force.arf(animalValFields.weight).name should be("weight")
+    force.arf(animalValFields.otherName).name should be("otherName")
+    force.arf(dogValFields.name).name should be("name")
+    force.arf(dogValFields.weight).name should be("weight")
+    force.arf(dogValFields.owner).name should be("owner")
+    force.arf(dogValFields.otherName).name should be("otherName")
+    force.arf(dogValFields.otherOtherName).name should be("otherOtherName")
+    force.arf(dogConstructorFields.name).name should be("name")
+    force.arf(dogConstructorFields.weight).name should be("weight")
   }
 
   they should "carry the correct class tags" in {
-    force.af(animalValFields.name).sourceClassTag should be(implicitly[ClassTag[Animal]])
-    force.af(animalValFields.name).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.af(animalValFields.weight).sourceClassTag should be(implicitly[ClassTag[Animal]])
-    force.af(animalValFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    force.af(animalValFields.otherName).sourceClassTag should be(implicitly[ClassTag[Animal]])
-    force.af(animalValFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.af(dogValFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogValFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    force.af(dogValFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogValFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    force.af(dogValFields.owner).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogValFields.owner).typeClassTag should be(implicitly[ClassTag[String]])
-    force.af(dogValFields.otherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogValFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.af(dogValFields.otherOtherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogValFields.otherOtherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.af(dogConstructorFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogConstructorFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    force.af(dogConstructorFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
-    force.af(dogConstructorFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
+    force.arf(animalValFields.name).sourceClassTag should be(implicitly[ClassTag[Animal]])
+    force.arf(animalValFields.name).typeClassTag should be(implicitly[ClassTag[Option[String]]])
+    force.arf(animalValFields.weight).sourceClassTag should be(implicitly[ClassTag[Animal]])
+    force.arf(animalValFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
+    force.arf(animalValFields.otherName).sourceClassTag should be(implicitly[ClassTag[Animal]])
+    force.arf(animalValFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
+    force.arf(dogValFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogValFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
+    force.arf(dogValFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogValFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
+    force.arf(dogValFields.owner).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogValFields.owner).typeClassTag should be(implicitly[ClassTag[String]])
+    force.arf(dogValFields.otherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogValFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
+    force.arf(dogValFields.otherOtherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogValFields.otherOtherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
+    force.arf(dogConstructorFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogConstructorFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
+    force.arf(dogConstructorFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
+    force.arf(dogConstructorFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
   }
 
 
@@ -129,18 +129,18 @@ class FieldsSpec extends FlatSpec with Matchers with Helpers {
   val rex: Dog = Dog("brown", 9L, Some("Rex"))
 
   "Getters" should "return the correct value" in {
-    force.af(animalValFields.name)(casimir).get should be(Some("Casimir"))
-    force.af(animalValFields.weight)(casimir).get should be(42L)
-    force.af(animalValFields.otherName)(casimir).get should be(Some("Casimir"))
-    force.af(animalValFields.name)(rex).get should be(Some("Rex"))
-    force.af(animalValFields.weight)(rex).get should be(9L)
-    force.af(animalValFields.otherName)(rex).get should be(Some("Rex"))
-    force.af(dogValFields.name)(rex).get should be(Some("Rex"))
-    force.af(dogValFields.weight)(rex).get should be(9L)
-    force.af(dogValFields.owner)(rex).get should be("Unknown")
-    force.af(dogValFields.otherName)(rex).get should be(Some("Rex"))
-    force.af(dogValFields.otherOtherName)(rex).get should be(Some("Rex"))
-    force.af(dogConstructorFields.name)(rex).get should be(Some("Rex"))
-    force.af(dogConstructorFields.weight)(rex).get should be(9L)
+    force.arf(animalValFields.name)(casimir).get should be(Some("Casimir"))
+    force.arf(animalValFields.weight)(casimir).get should be(42L)
+    force.arf(animalValFields.otherName)(casimir).get should be(Some("Casimir"))
+    force.arf(animalValFields.name)(rex).get should be(Some("Rex"))
+    force.arf(animalValFields.weight)(rex).get should be(9L)
+    force.arf(animalValFields.otherName)(rex).get should be(Some("Rex"))
+    force.arf(dogValFields.name)(rex).get should be(Some("Rex"))
+    force.arf(dogValFields.weight)(rex).get should be(9L)
+    force.arf(dogValFields.owner)(rex).get should be("Unknown")
+    force.arf(dogValFields.otherName)(rex).get should be(Some("Rex"))
+    force.arf(dogValFields.otherOtherName)(rex).get should be(Some("Rex"))
+    force.arf(dogConstructorFields.name)(rex).get should be(Some("Rex"))
+    force.arf(dogConstructorFields.weight)(rex).get should be(9L)
   }
 }

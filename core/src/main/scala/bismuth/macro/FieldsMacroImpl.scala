@@ -58,8 +58,8 @@ class FieldsMacroImpl(val c: whitebox.Context) {
     val nameAsLiteral = Literal(Constant(name.toString))
     val typ = sField.typeSignature
     q"""
-        val $name: bismuth.core.Field[$srcTpe, $typ] =
-          new bismuth.core.Field.Impl[$srcTpe, $typ]($nameAsLiteral, _.$name)
+        val $name: bismuth.core.Field[$srcTpe, $typ, Any, Any] =
+          new bismuth.core.Field[$srcTpe, $typ, Any, Any]($nameAsLiteral, _.$name)
       """
   }
 
