@@ -74,14 +74,14 @@ class FieldsSpec extends FlatSpec with Matchers with Helpers {
   }
 
   "Definitions" should "have the correct class" in {
-    def f : Field.Readable[Any, Any] = ??? // to ensuite Field is in the scope
+    def f: Field.Readable[Any, Any] = ??? // to ensuite Field is in the scope
     "val x: Field.Readable[Animal, Option[String]] = animalValFields.name" should compile
     "val x: Field.Readable[Animal, Long] = animalValFields.weight" should compile
-    "val x: Field.Readable[Dog, Some[String]] = dogValFields.name" should compile
-    "val x: Field.Readable[Dog, Long] = dogValFields.weight" should compile
+    "val x: Field.Copyable[Dog, Some[String]] = dogValFields.name" should compile
+    "val x: Field.Copyable[Dog, Long] = dogValFields.weight" should compile
     "val x: Field.Readable[Dog, String] = dogValFields.owner" should compile
-    "val x: Field.Readable[Dog, Some[String]] = dogConstructorFields.name" should compile
-    "val x: Field.Readable[Dog, Long] = dogConstructorFields.weight" should compile
+    "val x: Field.Copyable[Dog, Some[String]] = dogConstructorFields.name" should compile
+    "val x: Field.Copyable[Dog, Long] = dogConstructorFields.weight" should compile
   }
 
   they should "carry the correct name" in {
@@ -142,5 +142,17 @@ class FieldsSpec extends FlatSpec with Matchers with Helpers {
     force.arf(dogValFields.otherOtherName)(rex).get should be(Some("Rex"))
     force.arf(dogConstructorFields.name)(rex).get should be(Some("Rex"))
     force.arf(dogConstructorFields.weight)(rex).get should be(9L)
+  }
+
+  "Copiers" should "return the correct value" in {
+    force.dcf[Some[String]](dogValFields.name)(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
+    force.dcf[Long](dogValFields.weight)(rex).copy(12L) should be(rex.copy(weight = 12L))
+    force.dcf[Some[String]](dogConstructorFields.name)(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
+    force.dcf[Long](dogConstructorFields.weight)(rex).copy(12L) should be(rex.copy(weight = 12L))
+  }
+
+  they should "expect the correct type" in {
+    "dogValFields.name(rex).copy(None)" shouldNot typeCheck
+    "dogValFields.weight(rex).copy(\"42\")" shouldNot typeCheck
   }
 }

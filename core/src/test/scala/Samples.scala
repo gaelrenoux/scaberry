@@ -14,8 +14,8 @@ object Samples {
 
 
   val personFields = new Fields[Person] {
-    val nameField: Field[Person, String, Any, Any] = new Field[Person, String, Any, Any]("name", _.name)
-    val ageField: Field[Person, Long, Any, Any] = new Field[Person, Long, Any, Any]("age", _.age)
+    val nameField = new Field[Person, String, Field.Copier[Person, String], Any]("name", _.name, (p, n) => p.copy(name = n))
+    val ageField = new Field[Person, Long, Any, Any]("age", _.age)
   }
 
 
