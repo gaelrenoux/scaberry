@@ -13,10 +13,23 @@ object Samples {
   case class Dog(color: String, weight: Long, name: Some[String]) extends Animal
 
 
-  val personFields = new {
-    val nameField = new Field[Person, String, Field.Copier[Person, String], Any]("name", _.name, (p, n) => p.copy(name = n))
-    val ageField = new Field[Person, Long, Any, Any]("age", _.age)
+  object personFields {
+    val nameF = new Field[Person, String, Field.Copier[Person, String], Any]("name", _.name, (p, n) => p.copy(name = n))
+    val ageF = new Field[Person, Long, Any, Any]("age", _.age)
   }
+
+  case class PersonPatch(
+                          name: Patch[String] = Patch.NoChange,
+                          age: Patch[Long] = Patch.NoChange
+                        )
+
+
+  case class PersonFilter(
+                           name: Filter[String] = Filter.None,
+                           age: Filter[Long] = Filter.None
+                         ) extends Filter.Operation[Person](p => name(p.name) && age(p.age))
+
+  val f1 = PersonFilter(name = "")
 
 
 }
