@@ -9,9 +9,12 @@ import scala.reflect.ClassTag
 
 class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
 
-  val animalValFields = FieldsMacro.fromPublic[Animal]
-  val dogValFields = FieldsMacro.fromPublic[Dog]
-  val dogConstructorFields = FieldsMacro.fromConstructor[Dog]
+  private val animalValFields = FieldsMacro.fromPublic[Animal]
+  private val dogValFields = FieldsMacro.fromPublic[Dog]
+  private val dogConstructorFields = FieldsMacro.fromConstructor[Dog]
+
+  /** Unused. Makes sure the Field import is kept even on automatic refactoring. */
+  val f: Field.Readable[Any, Any] = null
 
   "fromPublic" should "return the public vals, vars, and nullary defs" in {
     "animalValFields.name" should compile
@@ -75,7 +78,6 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
   }
 
   "Definitions" should "have the correct class" in {
-    def f: Field.Readable[Any, Any] = ??? // to ensuite Field is in the scope
     "val x: Field.Readable[Animal, Option[String]] = animalValFields.name" should compile
     "val x: Field.Readable[Animal, Long] = animalValFields.weight" should compile
     "val x: Field.Copyable[Dog, Some[String]] = dogValFields.name" should compile
