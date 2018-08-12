@@ -1,3 +1,4 @@
+import bismuth.macros
 import bismuth.core._
 
 object Samples {
@@ -13,7 +14,7 @@ object Samples {
   case class Dog(color: String, weight: Long, name: Some[String]) extends Animal
 
 
-  val personFields = new {
+  val personFields = new Fields[Person] {
     val nameField = new Field[Person, String, Field.Copier[Person, String], Any]("name", _.name, (p, n) => p.copy(name = n))
     val ageField = new Field[Person, Long, Any, Any]("age", _.age)
   }

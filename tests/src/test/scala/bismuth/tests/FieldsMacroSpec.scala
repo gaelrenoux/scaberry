@@ -1,16 +1,17 @@
 package bismuth.tests
 
-import bismuth.core.{Field, Fields}
+import bismuth.core.Field
+import bismuth.macros.FieldsMacro
 import bismuth.tests.Models._
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.reflect.ClassTag
 
-class FieldsSpec extends FlatSpec with Matchers with Helpers {
+class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
 
-  val animalValFields = Fields.fromPublic[Animal]
-  val dogValFields = Fields.fromPublic[Dog]
-  val dogConstructorFields = Fields.fromConstructor[Dog]
+  val animalValFields = FieldsMacro.fromPublic[Animal]
+  val dogValFields = FieldsMacro.fromPublic[Dog]
+  val dogConstructorFields = FieldsMacro.fromConstructor[Dog]
 
   "fromPublic" should "return the public vals, vars, and nullary defs" in {
     "animalValFields.name" should compile
@@ -154,5 +155,10 @@ class FieldsSpec extends FlatSpec with Matchers with Helpers {
   they should "expect the correct type" in {
     "dogValFields.name(rex).copy(None)" shouldNot typeCheck
     "dogValFields.weight(rex).copy(\"42\")" shouldNot typeCheck
+  }
+
+  they should "not compile when not available" in {
+    "animalValFields.name(casimir).copy(None)" shouldNot typeCheck
+    "animalValFields.weight(casimir).copy(42L)" shouldNot typeCheck
   }
 }

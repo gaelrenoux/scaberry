@@ -1,4 +1,4 @@
-package bismuth.`macro`
+package bismuth.macros
 
 import bismuth.core.Fields
 

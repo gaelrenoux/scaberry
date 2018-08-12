@@ -38,11 +38,19 @@ lazy val core = project // (project in file("core"))
   libraryDependencies += "org.scala-lang" % "scala-reflect" % V.scala
 )
 
-lazy val tests = project //(project in file("tests"))
+lazy val macros = project // (project in file("macros"))
   .dependsOn(core)
+  .settings(
+  commonSettings,
+  scalacOptions += "-language:experimental.macros",
+  libraryDependencies += "org.scala-lang" % "scala-reflect" % V.scala
+)
+
+lazy val tests = project //(project in file("tests"))
+  .dependsOn(core, macros)
   .settings(
     commonSettings,
       scalacOptions += "-Dbismuth.macro.debug=true",
   )
 
-lazy val all = (project in file(".")).aggregate(core, tests)
+lazy val all = (project in file(".")).aggregate(core, macros, tests)
