@@ -18,9 +18,9 @@ object Samples {
     val ageF = new Field[Person, Long, Any, Any]("age", _.age)
   }
 
-  case class PersonPatch(
-                          name: Patch[String] = Patch.NoChange,
-                          age: Patch[Long] = Patch.NoChange
+  case class PersonUpdate(
+                          name: Update[String] = Update.Identity,
+                          age: Update[Long] = Update.Identity
                         )
 
 

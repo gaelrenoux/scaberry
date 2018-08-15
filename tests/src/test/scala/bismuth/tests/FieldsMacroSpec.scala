@@ -77,6 +77,10 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
     "dogConstructorFields.parameterized2" shouldNot typeCheck
   }
 
+  "from" should "not work on non-case classes" in {
+    "FieldsMacro.from[Animal]" shouldNot compile
+  }
+
   "Definitions" should "have the correct class" in {
     "val x: Field.Readable[Animal, Option[String]] = animalValFields.name" should compile
     "val x: Field.Readable[Animal, Long] = animalValFields.weight" should compile

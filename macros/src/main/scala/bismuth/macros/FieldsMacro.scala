@@ -4,7 +4,9 @@ import bismuth.core.Fields
 
 object FieldsMacro {
 
-  def fromConstructor[Source]: Fields[Source] = macro FieldsMacroImpl.constructorFields[Source]
+  def from[Source]: Fields[Source] = macro FieldsMacroImpl.fromCaseClass[Source]
 
-  def fromPublic[Source]: Fields[Source] = macro FieldsMacroImpl.publicFields[Source]
+  def fromConstructor[Source]: Fields[Source] = macro FieldsMacroImpl.fromPrimaryConstructor[Source]
+
+  def fromPublic[Source]: Fields[Source] = macro FieldsMacroImpl.fromPublicFields[Source]
 }
