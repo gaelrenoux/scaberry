@@ -25,7 +25,6 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
     val tree =
       q"""
         new bismuth.core.Fields[$srcTpe] {
-           implicit val runtimeMirror = scala.reflect.runtime.universe.runtimeMirror(getClass.getClassLoader)
           ..$fieldsContent
         }
       """

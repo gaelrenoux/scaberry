@@ -13,9 +13,9 @@ object Samples {
   case class Dog(color: String, weight: Long, name: Some[String]) extends Animal
 
 
-  object personFields {
-    val nameF = new Field[Person, String, Field.Copier[Person, String], Any]("name", _.name, (p, n) => p.copy(name = n))
-    val ageF = new Field[Person, Long, Any, Any]("age", _.age)
+  val personFields = new Fields[Person] {
+    val name = new Field[Person, String, Field.Copier[Person, String], Field.NoSetter.type]("name", _.name, (p, n) => p.copy(name = n))
+    val age = new Field[Person, Long, Field.Copier[Person, Long], Field.NoSetter.type]("name", _.age, (p, a) => p.copy(age = a))
   }
 
   case class PersonUpdate(

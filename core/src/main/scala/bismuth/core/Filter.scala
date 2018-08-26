@@ -2,9 +2,9 @@ package bismuth.core
 
 trait Filter[-Target] extends Function1[Target, Boolean] {
 
-  def verify(t: Target): Boolean
+  def verify(target: Target): Boolean
 
-  def apply(t: Target): Boolean = verify(t)
+  def apply(target: Target): Boolean = verify(target)
 
 }
 

@@ -10,7 +10,7 @@ trait Helpers extends Debug with Checkers {
 
   import c.universe._
 
-  /** Iterable on all values of the primary constructor of the type. */
+  /** Iterable on all fields of the case class. */
   def caseClassFields(tpe: Type): Iterable[TermSymbol] =
     checking(isCaseClass(tpe), s"Type $tpe is not a case class")(primaryConstructorParams(tpe))
 
