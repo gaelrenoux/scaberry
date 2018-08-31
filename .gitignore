@@ -2,3 +2,6 @@
 target/
 tests/target/
 project/target/
+
+.bloop
+project/.bloop
