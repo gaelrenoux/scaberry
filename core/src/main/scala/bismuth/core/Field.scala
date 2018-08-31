@@ -4,7 +4,7 @@ import scala.reflect.ClassTag
 
 
 /** A field on a type. */
-class Field[Source, Type, +MaybeCopier, +MaybeSetter](val name: String,
+class Field[Source, Type, +MaybeCopier, +MaybeSetter](val name: Symbol,
                                                     getter: Source => Type,
                                                     copier: MaybeCopier = Field.NoCopier,
                                                     setter: MaybeSetter = Field.NoSetter
@@ -15,6 +15,14 @@ class Field[Source, Type, +MaybeCopier, +MaybeSetter](val name: String,
 
   def apply[Target <: Source](target: Target): Field.Application[Source, Type, Target, MaybeCopier, MaybeSetter] =
     new Field.Application(target, getter, copier, setter)
+
+  def filter(f: Filter[Type]) = new Filter.Field[Source, Type](name, getter, f)
+
+  /** Commodity method */
+  def filterEq(v: Type) = new Filter.Field[Source, Type](name, getter, Filter.value(v))
+
+  /** Commodity method */
+  def filterWith(f: Type => Boolean) = new Filter.Field[Source, Type](name, getter, Filter.operation(f))
 }
 
 object Field {

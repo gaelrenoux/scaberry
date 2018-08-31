@@ -6,7 +6,7 @@ private[macros] trait Debug {
 
   val c: whitebox.Context
 
-  lazy val debugEnabled = true //Option(System.getProperty("bismuth.macro.debug")).filterNot(_.isEmpty).map(_.toLowerCase).exists("true".equals)
+  lazy val debugEnabled: Boolean = Option(System.getProperty("bismuth.macro.debug")).filterNot(_.isEmpty).map(_.toLowerCase).exists("true".equals)
 
   def debug(msg: => String): Unit = {
     if (debugEnabled) {

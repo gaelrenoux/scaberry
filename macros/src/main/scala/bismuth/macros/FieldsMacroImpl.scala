@@ -36,6 +36,7 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
   /** For a single field, returns a Tree of the associated Field object. */
   private def fieldToTree(sField: TermSymbol, srcTpe: Type, copyParams: List[TermSymbol]): Tree = {
     val name = sField.name
+    //TODO Handle Symbol directly
     val nameAsLiteral = Literal(Constant(name.toString))
     val typ = sField.typeSignature.dealias.finalResultType
 
@@ -54,7 +55,7 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
     debug(s"Writing field instance for $srcTpe.$name with $copierTpe and $setterTpe")
 
     q"""
-        val $name = new bismuth.core.Field[$srcTpe, $typ, $copierTpe, $setterTpe]($nameAsLiteral, _.$name, $copier, $setter)
+        val $name = new bismuth.core.Field[$srcTpe, $typ, $copierTpe, $setterTpe](Symbol($nameAsLiteral), _.$name, $copier, $setter)
     """
   }
 
