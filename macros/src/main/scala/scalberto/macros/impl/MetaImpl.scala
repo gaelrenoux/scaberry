@@ -1,7 +1,6 @@
 package scalberto.macros.impl
 
-import scalberto.core.Field
-import scalberto.core.Field.Copier
+import scalberto.core.CopyableField
 import scalberto.macros.Meta
 
-class MetaImpl[Source](val fieldsMap: Map[Symbol, Field[Source, _, Copier[Source, _]]]) extends Meta[Source]
+class MetaImpl[Source](val fieldsMap: Map[Symbol, CopyableField[Source, _]]) extends Meta[Source]

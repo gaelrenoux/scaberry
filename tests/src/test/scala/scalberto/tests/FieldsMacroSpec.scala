@@ -2,14 +2,14 @@ package scalberto.tests
 
 import scalberto.tests.data._
 import org.scalatest.{FlatSpec, Matchers}
-import scalberto.core.Field
+import scalberto.core.{CopyableField, Field}
 
 import scala.reflect.ClassTag
 
 class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
 
   /** Unused. Makes sure the Field import is kept even on automatic refactoring. */
-  val f: Field.Readable[Any, Any] = null
+  val f: (Field[Any, Any], CopyableField[Any, Any]) = null
 
   "fromPublic" should "return the public vals, vars, and nullary defs" in {
     "Animal.publicFields.name" should compile
@@ -95,13 +95,13 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
   }
 
   "Definitions" should "have the correct class" in {
-    "val x: Field.Readable[Animal, Option[String]] = Animal.publicFields.name" should compile
-    "val x: Field.Readable[Animal, Long] = Animal.publicFields.weight" should compile
-    "val x: Field.Copyable[Dog, Some[String]] = Dog.publicFields.name" should compile
-    "val x: Field.Copyable[Dog, Long] = Dog.publicFields.weight" should compile
-    "val x: Field.Readable[Dog, String] = Dog.publicFields.owner" should compile
-    "val x: Field.Copyable[Dog, Some[String]] = Dog.constructorFields.name" should compile
-    "val x: Field.Copyable[Dog, Long] = Dog.constructorFields.weight" should compile
+    "val x: Field[Animal, Option[String]] = Animal.publicFields.name" should compile
+    "val x: Field[Animal, Long] = Animal.publicFields.weight" should compile
+    "val x: CopyableField[Dog, Some[String]] = Dog.publicFields.name" should compile
+    "val x: CopyableField[Dog, Long] = Dog.publicFields.weight" should compile
+    "val x: Field[Dog, String] = Dog.publicFields.owner" should compile
+    "val x: CopyableField[Dog, Some[String]] = Dog.constructorFields.name" should compile
+    "val x: CopyableField[Dog, Long] = Dog.constructorFields.weight" should compile
   }
 
   they should "carry the correct name" in {

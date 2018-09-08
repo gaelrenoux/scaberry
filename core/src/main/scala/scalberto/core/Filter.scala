@@ -41,12 +41,12 @@ object Filter {
   def operation[T](op: T => Boolean) = new Operation(op)
 
   /** Field filter. Filter on an object by filtering on one of that object's fields. */
-  final class Field[T, A] private[core](val name: Symbol, getter: Getter[T, A], val fieldFilter: Filter[A]) extends Filter[T] {
+  final class Field[-T, -A] private[core](val name: Symbol, getter: Getter[T, A], val fieldFilter: Filter[A]) extends Filter[T] {
     override def verify(target: T): Boolean = fieldFilter(getter(target))
   }
 
   /** Composed filter, obtained by combining filters. */
-  final class Composed[T] private[core](list: List[Filter[T]]) extends Filter[T] {
+  final class Composed[-T] private[core](list: List[Filter[T]]) extends Filter[T] {
     override def verify(target: T): Boolean = list.forall(_.verify(target))
 
     lazy val subfilters: List[Filter[T]] = list.reverse
@@ -56,6 +56,6 @@ object Filter {
   }
 
   /** Trait for Filters created through macros. */
-  trait Custom[T] extends Filter[T]
+  trait Custom[-T] extends Filter[T]
 
 }

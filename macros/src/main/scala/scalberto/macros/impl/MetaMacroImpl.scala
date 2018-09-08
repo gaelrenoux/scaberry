@@ -1,6 +1,6 @@
 package scalberto.macros.impl
 
-import scalberto.core.Field
+import scalberto.core.{CopyableField, Field}
 import scalberto.core.Field.Copier
 import scalberto.macros.{Debug, Fields, Meta}
 
@@ -30,7 +30,7 @@ class MetaMacroImpl(val c: whitebox.Context) extends ClassStructureHelper with F
     c.Expr[Meta[Source]](tree)
   }
 
-  protected def fieldMap[Source: c.WeakTypeTag](terms: Iterable[TermSymbol], srcTpe: Type): c.Expr[Map[Symbol, Field[Source, _, _]]] = {
+  protected def fieldMap[Source: c.WeakTypeTag](terms: Iterable[TermSymbol], srcTpe: Type): c.Expr[Map[Symbol, CopyableField[Source, _]]] = {
     val copyMethodParams = findCopyMethod(srcTpe).map(_.paramLists.flatten.map(_.asTerm)).getOrElse(Nil)
     val fieldsContent = terms.map { sField =>
       val (sym, value) = fieldToValue(sField, srcTpe, copyMethodParams)
@@ -40,10 +40,10 @@ class MetaMacroImpl(val c: whitebox.Context) extends ClassStructureHelper with F
     val tree = q""" Map(..$fieldsContent) """
 
     debug(showCode(tree))
-    c.Expr[Map[Symbol, Field[Source, _, _]]](tree)
+    c.Expr[Map[Symbol, CopyableField[Source, _]]](tree)
   }
 
-  def field[Source: c.WeakTypeTag, Type: c.WeakTypeTag](desc: c.Expr[Source => Type]): c.Expr[Field[Source, Type, Copier[Source, Type]]] = {
+  def field[Source: c.WeakTypeTag, Type: c.WeakTypeTag](desc: c.Expr[Source => Type]): c.Expr[CopyableField[Source, Type]] = {
     ???
   }
 

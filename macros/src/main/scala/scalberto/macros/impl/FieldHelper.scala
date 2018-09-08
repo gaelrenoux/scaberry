@@ -1,6 +1,5 @@
 package scalberto.macros.impl
 
-import scalberto.core.Field
 import scalberto.macros.Debug
 import scalberto.macros.checks.Checkers
 
@@ -25,21 +24,20 @@ trait FieldHelper extends ClassStructureHelper with Debug with Checkers {
     val nameAsSymbol = Symbol(name.toString)
     val typ = sField.typeSignature.dealias.finalResultType
 
-    val (copier, copierTpe) = copyParams.find { p =>
-      val bool = p.name == name && typ =:= p.typeSignature.dealias.finalResultType
-      bool
-    } match {
-      case None =>
-        (q"scalberto.core.Field.NoCopier", tq"scalberto.core.Field.NoCopier.type")
-      case Some(_) =>
-        (q"{ (src: $srcTpe, a: $typ) => src.copy($name = a) }", tq"scalberto.core.Field.Copier[$srcTpe, $typ]")
+    val copyable = copyParams.exists { p =>
+      p.name == name && p.typeSignature.dealias.finalResultType =:= typ
     }
 
-    debug(s"Writing field instance for $srcTpe.$name with $copierTpe")
+    debug(s"Writing field instance for $srcTpe.$name")
 
-    (
-      q"$nameAsSymbol",
-      q"new scalberto.core.Field[$srcTpe, $typ, $copierTpe]($nameAsSymbol, _.$name, $copier)"
-    )
+    val field =
+      if (copyable) {
+        val copier = q"{ (src: $srcTpe, a: $typ) => src.copy($name = a) }"
+        q"new scalberto.core.CopyableField[$srcTpe, $typ]($nameAsSymbol, _.$name, $copier)"
+      } else {
+        q"new scalberto.core.Field[$srcTpe, $typ]($nameAsSymbol, _.$name)"
+      }
+
+    (q"$nameAsSymbol", field)
   }
 }

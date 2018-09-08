@@ -1,12 +1,10 @@
 package scalberto.macros
 
-import scalberto.core.Field
-import scalberto.core.Field.Copier
-import scalberto.macros.impl.MetaMacroImpl
+import scalberto.core.CopyableField
 
 trait Meta[Source] {
 
-  val fieldsMap: Map[Symbol, Field[Source, _, Copier[Source, _]]]
+  val fieldsMap: Map[Symbol, CopyableField[Source, _]]
 
   //val fieldsMapRo: Map[Symbol, Field[Source, _, NoCopier]]
 

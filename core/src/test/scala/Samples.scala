@@ -1,4 +1,4 @@
-import scalberto.core.{Field, Filter, Update}
+import scalberto.core.{CopyableField, Field, Filter, Update}
 
 object Samples {
 
@@ -14,8 +14,8 @@ object Samples {
 
 
   val personFields = new {
-    val name = new Field[Person, String, Field.Copier[Person, String]]('name, _.name, (p, n) => p.copy(name = n))
-    val age = new Field[Person, Long, Field.Copier[Person, Long]]('age, _.age, (p, a) => p.copy(age = a))
+    val name = new CopyableField[Person, String]('name, _.name, (p, n) => p.copy(name = n))
+    val age = new CopyableField[Person, Long]('age, _.age, (p, a) => p.copy(age = a))
   }
 
   val aFilter = personFields.name.filterEq("Roger") |@| personFields.age.filterWith(_ > 18)
