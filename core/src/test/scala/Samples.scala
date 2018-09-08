@@ -4,23 +4,17 @@ object Samples {
 
   case class Person(name: String, age: Long)
 
-  trait Animal {
-    val weight: Long
-    val color: String
-    val name: Option[String]
+  val nameCopier: (Person, String) => Person =  { (p, n) => p.copy(name = n) }
+  val ageCopier: (Person, Long) => Person =  { (p, a) => p.copy(age = a) }
+
+  object PersonFields {
+    val name = new CopyableField[Person, String]('name, _.name, nameCopier)
+    val age = new CopyableField[Person, Long]('age, _.age, ageCopier)
   }
 
-  case class Dog(color: String, weight: Long, name: Some[String]) extends Animal
+  val aFilter: Filter[Person] = PersonFields.name.filterEq("Roger") |@| PersonFields.age.filterWith(_ > 18)
 
-
-  val personFields = new {
-    val name = new CopyableField[Person, String]('name, _.name, (p, n) => p.copy(name = n))
-    val age = new CopyableField[Person, Long]('age, _.age, (p, a) => p.copy(age = a))
-  }
-
-  val aFilter = personFields.name.filterEq("Roger") |@| personFields.age.filterWith(_ > 18)
-
-  val anUpdate = personFields.name.updateSet("Roger") |@| personFields.age.updateWith(_ * 2)
+  val anUpdate: Update[Person] = PersonFields.name.updateSet("Roger") |@| PersonFields.age.updateWith(_ * 2)
 
   case class PersonFilter(
                            name: Filter[String] = Filter.None,

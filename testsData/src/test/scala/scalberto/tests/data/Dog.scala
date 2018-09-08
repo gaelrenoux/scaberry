@@ -1,6 +1,6 @@
 package scalberto.tests.data
 
-import scalberto.macros.FieldsMacro
+import scalberto.macros.{FieldsMacro, MetaMacro}
 
 case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Animal {
   val owner: String = "Unknown"
@@ -22,4 +22,6 @@ object Dog {
   val fields = FieldsMacro.from[Dog]
   val publicFields = FieldsMacro.fromPublic[Dog]
   val constructorFields = FieldsMacro.fromConstructor[Dog]
+
+  val meta = MetaMacro.from[Dog]
 }

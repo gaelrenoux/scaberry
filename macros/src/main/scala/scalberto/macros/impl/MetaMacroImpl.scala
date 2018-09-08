@@ -1,8 +1,7 @@
 package scalberto.macros.impl
 
-import scalberto.core.{CopyableField, Field}
-import scalberto.core.Field.Copier
-import scalberto.macros.{Debug, Fields, Meta}
+import scalberto.core.CopyableField
+import scalberto.macros.{Debug, Meta}
 
 import scala.reflect.macros.whitebox
 
@@ -46,8 +45,6 @@ class MetaMacroImpl(val c: whitebox.Context) extends ClassStructureHelper with F
   def field[Source: c.WeakTypeTag, Type: c.WeakTypeTag](desc: c.Expr[Source => Type]): c.Expr[CopyableField[Source, Type]] = {
     ???
   }
-
-
 
 
 }
