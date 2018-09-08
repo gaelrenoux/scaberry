@@ -92,16 +92,16 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
   }
 
   they should "carry the correct name" in {
-    force.arf(animalValFields.name).name should be("name")
-    force.arf(animalValFields.weight).name should be("weight")
-    force.arf(animalValFields.otherName).name should be("otherName")
-    force.arf(dogValFields.name).name should be("name")
-    force.arf(dogValFields.weight).name should be("weight")
-    force.arf(dogValFields.owner).name should be("owner")
-    force.arf(dogValFields.otherName).name should be("otherName")
-    force.arf(dogValFields.otherOtherName).name should be("otherOtherName")
-    force.arf(dogConstructorFields.name).name should be("name")
-    force.arf(dogConstructorFields.weight).name should be("weight")
+    force.arf(animalValFields.name).name.name should be("name")
+    force.arf(animalValFields.weight).name.name should be("weight")
+    force.arf(animalValFields.otherName).name.name should be("otherName")
+    force.arf(dogValFields.name).name.name should be("name")
+    force.arf(dogValFields.weight).name.name should be("weight")
+    force.arf(dogValFields.owner).name.name should be("owner")
+    force.arf(dogValFields.otherName).name.name should be("otherName")
+    force.arf(dogValFields.otherOtherName).name.name should be("otherOtherName")
+    force.arf(dogConstructorFields.name).name.name should be("name")
+    force.arf(dogConstructorFields.weight).name.name should be("weight")
   }
 
   they should "carry the correct class tags" in {
