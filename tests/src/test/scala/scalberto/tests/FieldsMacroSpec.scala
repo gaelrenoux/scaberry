@@ -76,6 +76,24 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
     "FieldsMacro.from[Animal]" shouldNot compile
   }
 
+  it should "not return other vals, vars and defs" in {
+    "Dog.fields.animate" shouldNot typeCheck
+    "Dog.fields.owner" shouldNot typeCheck
+    "Dog.fields.genus" shouldNot typeCheck
+    "Dog.fields.whatever" shouldNot typeCheck
+    "Dog.fields.whatever2" shouldNot typeCheck
+    "Dog.fields.unary" shouldNot typeCheck
+    "Dog.fields.parameterized" shouldNot typeCheck
+    "Dog.fields.unary2" shouldNot typeCheck
+    "Dog.fields.parameterized2" shouldNot typeCheck
+    "Dog.fields.otherName" shouldNot typeCheck
+    "Dog.fields.otherOtherName" shouldNot typeCheck
+  }
+
+  it should "not return fields from another constructor" in {
+    "Dog.fields.other" shouldNot typeCheck
+  }
+
   "Definitions" should "have the correct class" in {
     "val x: Field.Readable[Animal, Option[String]] = Animal.publicFields.name" should compile
     "val x: Field.Readable[Animal, Long] = Animal.publicFields.weight" should compile

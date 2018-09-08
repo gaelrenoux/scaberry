@@ -1,5 +1,7 @@
 package scalberto.macros
 
+import scalberto.macros.impl.FieldsMacroImpl
+
 object FieldsMacro {
 
   def from[Source]: Fields[Source] = macro FieldsMacroImpl.fromCaseClass[Source]

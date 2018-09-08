@@ -1,10 +1,11 @@
-package scalberto.macros
+package scalberto.macros.impl
 
+import scalberto.macros.Debug
 import scalberto.macros.checks.Checkers
 
 import scala.reflect.macros.whitebox
 
-trait Helpers extends Debug with Checkers {
+trait ClassStructureHelper extends Debug with Checkers {
 
   val c: whitebox.Context
 
