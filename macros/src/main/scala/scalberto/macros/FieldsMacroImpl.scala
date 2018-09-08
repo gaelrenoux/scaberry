@@ -48,12 +48,10 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
         (q"{ (src: $srcTpe, a: $typ) => src.copy($name = a) }", tq"scalberto.core.Field.Copier[$srcTpe, $typ]")
     }
 
-    val (setter, setterTpe) = (q"scalberto.core.Field.NoSetter", tq"scalberto.core.Field.NoSetter.type")
-
-    debug(s"Writing field instance for $srcTpe.$name with $copierTpe and $setterTpe")
+    debug(s"Writing field instance for $srcTpe.$name with $copierTpe")
 
     q"""
-        val $name = new scalberto.core.Field[$srcTpe, $typ, $copierTpe, $setterTpe](Symbol($nameAsLiteral), _.$name, $copier, $setter)
+        val $name = new scalberto.core.Field[$srcTpe, $typ, $copierTpe](Symbol($nameAsLiteral), _.$name, $copier)
     """
   }
 

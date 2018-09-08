@@ -14,8 +14,8 @@ object Samples {
 
 
   val personFields = new {
-    val name = new Field[Person, String, Field.Copier[Person, String], Field.NoSetter.type]('name, _.name, (p, n) => p.copy(name = n))
-    val age = new Field[Person, Long, Field.Copier[Person, Long], Field.NoSetter.type]('age, _.age, (p, a) => p.copy(age = a))
+    val name = new Field[Person, String, Field.Copier[Person, String]]('name, _.name, (p, n) => p.copy(name = n))
+    val age = new Field[Person, Long, Field.Copier[Person, Long]]('age, _.age, (p, a) => p.copy(age = a))
   }
 
   val aFilter = personFields.name.filterEq("Roger") |@| personFields.age.filterWith(_ > 18)
