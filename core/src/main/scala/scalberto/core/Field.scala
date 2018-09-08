@@ -6,20 +6,17 @@ import scala.reflect.ClassTag
 
 
 /** A field on a type. */
-class Field[Source, Type](val name: Symbol,
+class Field[-Source, Type](val name: Symbol,
                           private val getter: Source => Type
                          )(implicit
-                           val typeClassTag: ClassTag[Type],
-                           val sourceClassTag: ClassTag[Source]
+                           val typeClassTag: ClassTag[Type]
                          ) {
 
-  private type Application[T <: Source] = Field.Application[Source, Type, Field[Source, Type], T]
-
-  def apply[Target <: Source](target: Target): Application[Target] =
-    new Field.Application(this, target)
+  def apply[Target <: Source](target: Target): Field.Application[Type] =
+    new Field.Application[Type](getter(target))
 
   /** Returns a new filter on the source object which applies argument filter to this field. */
-  def filter(f: Filter[Type]) =
+  def filter(f: Filter[Type]): Filter.Field[Source, Type] =
     new Filter.Field[Source, Type](name, getter, f)
 
   /** Commodity method */
@@ -29,20 +26,21 @@ class Field[Source, Type](val name: Symbol,
   /** Commodity method */
   def filterWith(f: Type => Boolean): Filter.Field[Source, Type] =
     filter(Filter.operation(f))
+
+  /** The same field but on a more specific class, or with a wider type. */
+  def lifted[S <: Source, T >: Type : ClassTag]: Field[S, T] = new Field[S, T](name, getter)
+
 }
 
 class CopyableField[Source, Type](name: Symbol,
                                   getter: Source => Type,
                                   private[core] val copier: Copier[Source, Type]
                                  )(implicit
-                                   typeClassTag: ClassTag[Type],
-                                   sourceClassTag: ClassTag[Source]
+                                   typeClassTag: ClassTag[Type]
                                  ) extends Field[Source, Type](name, getter) {
 
-  private type Application[T <: Source] = Field.CopyableApplication[Source, Type, CopyableField[Source, Type], T]
-
-  override def apply[Target <: Source](target: Target): Application[Target] =
-    new Field.CopyableApplication(this, target)
+  override def apply[Target <: Source](target: Target): Field.CopyableApplication[Source, Type] =
+    new Field.CopyableApplication(getter(target), copier(target, _))
 
   /** Returns a new update on the source object which applies argument update to this field. */
   def update(u: Update[Type]) =
@@ -63,18 +61,14 @@ object Field {
   type Getter[-Source, +Type] = Source => Type
   type Copier[Source, -Type] = (Source, Type) => Source
 
-  /** Application of the field to a specific instance */
-  class Application[Source, Type, +F <: Field[Source, Type], Target <: Source]
-  (origin: F, target: Target) {
-    def get: Type = origin.getter(target)
+  /** Application of the field to a specific instance. */
+  class Application[Type](wrapped: => Type) {
+    def get: Type = wrapped
   }
 
-  /** Application of the copyable field to a specific instance */
-  class CopyableApplication[Source, Type, +F <: CopyableField[Source, Type], Target <: Source]
-  (origin: F, target: Target) extends Application[Source, Type, F, Target](origin, target) {
-
-    def copy(a: Type): Source = origin.copier(target, a)
-
+  /** Application of the copyable field to a specific instance. */
+  class CopyableApplication[Source, Type](wrapped: => Type, copier: Type => Source) extends Application[Type](wrapped) {
+    def copy(a: Type): Source = copier(a)
   }
 
 }

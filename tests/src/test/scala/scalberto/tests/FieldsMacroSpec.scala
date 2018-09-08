@@ -118,25 +118,15 @@ class FieldsMacroSpec extends FlatSpec with Matchers with Helpers {
   }
 
   they should "carry the correct class tags" in {
-    force.arf(Animal.publicFields.name).sourceClassTag should be(implicitly[ClassTag[Animal]])
     force.arf(Animal.publicFields.name).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.arf(Animal.publicFields.weight).sourceClassTag should be(implicitly[ClassTag[Animal]])
     force.arf(Animal.publicFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    force.arf(Animal.publicFields.otherName).sourceClassTag should be(implicitly[ClassTag[Animal]])
     force.arf(Animal.publicFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.arf(Dog.publicFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.publicFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    force.arf(Dog.publicFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.publicFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    force.arf(Dog.publicFields.owner).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.publicFields.owner).typeClassTag should be(implicitly[ClassTag[String]])
-    force.arf(Dog.publicFields.otherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.publicFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.arf(Dog.publicFields.otherOtherName).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.publicFields.otherOtherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.arf(Dog.constructorFields.name).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.constructorFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    force.arf(Dog.constructorFields.weight).sourceClassTag should be(implicitly[ClassTag[Dog]])
     force.arf(Dog.constructorFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
   }
 
