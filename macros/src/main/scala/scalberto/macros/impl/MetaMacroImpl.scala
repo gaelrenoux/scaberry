@@ -38,12 +38,20 @@ class MetaMacroImpl(val c: whitebox.Context) extends ClassStructureHelper with F
 
     val tree = q""" Map(..$fieldsContent) """
 
-    debug(showCode(tree))
     c.Expr[Map[Symbol, CopyableField[Source, _]]](tree)
   }
 
   def field[Source: c.WeakTypeTag, Type: c.WeakTypeTag](desc: c.Expr[Source => Type]): c.Expr[CopyableField[Source, Type]] = {
-    ???
+    val meta = c.prefix
+    val fieldName = desc match {
+      case Expr(Function(params, Select(tree, name))) => name.toString
+      case _ => c.abort(c.enclosingPosition, "Argument should be a direct call of the field")
+    }
+
+
+
+
+    c.Expr(q"null")
   }
 
 

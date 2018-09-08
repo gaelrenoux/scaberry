@@ -24,4 +24,5 @@ object Dog {
   val constructorFields = FieldsMacro.fromConstructor[Dog]
 
   val meta = MetaMacro.from[Dog]
+  val x = meta.field(_.color)
 }

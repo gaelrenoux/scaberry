@@ -1,11 +1,10 @@
 package scalberto.macros.impl
 
-import scalberto.macros.Debug
 import scalberto.macros.checks.Checkers
 
 import scala.reflect.macros.whitebox
 
-trait FieldHelper extends ClassStructureHelper with Debug with Checkers {
+trait FieldHelper extends ClassStructureHelper with Checkers {
 
   val c: whitebox.Context
 
@@ -27,8 +26,6 @@ trait FieldHelper extends ClassStructureHelper with Debug with Checkers {
     val copyable = copyParams.exists { p =>
       p.name == name && p.typeSignature.dealias.finalResultType =:= typ
     }
-
-    debug(s"Writing field instance for $srcTpe.$name")
 
     val field =
       if (copyable) {
