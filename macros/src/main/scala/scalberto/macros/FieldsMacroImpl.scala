@@ -1,7 +1,5 @@
 package scalberto.macros
 
-import scalberto.core.Fields
-
 import scala.reflect.macros.whitebox
 
 /** Implementation of the fields macros */
@@ -24,7 +22,7 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
 
     val tree =
       q"""
-        new scalberto.core.Fields[$srcTpe] {
+        new scalberto.macros.Fields[$srcTpe] {
           ..$fieldsContent
         }
       """

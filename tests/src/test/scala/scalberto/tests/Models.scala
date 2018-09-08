@@ -9,6 +9,8 @@ object Models {
     val color: String
     val name: Option[String]
 
+    lazy val itself: Animal = this
+
     protected val animate = true
     def otherName: Option[String] = name
     var whatever = 0

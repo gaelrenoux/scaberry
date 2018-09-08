@@ -17,6 +17,8 @@ class FilterSpec extends FlatSpec with Matchers with Helpers {
   }
 
   val rex: Dog = Dog("brown", 9L, Some("Rex"))
+  val littleRex: Dog = rex.copy(weight = 1L)
+  val popa: Dog = Dog("white", 9L, Some("Popa"))
 
   "None" should "verify any value" in {
     Filter.None.verify(42) should be(true)
@@ -40,5 +42,32 @@ class FilterSpec extends FlatSpec with Matchers with Helpers {
   "Field filter" should "work with a value" in {
     force.rf[Animal, Option[String]](animalFields.name).filterEq(Some("Casimir")).verify(casimir) should be(true)
     force.rf[Animal, Option[String]](animalFields.name).filterEq(Some("Rex")).verify(casimir) should be(false)
+  }
+
+  it should "work with an operation" in {
+    force.rf[Animal, Option[String]](animalFields.name).filterWith(_.isDefined).verify(casimir) should be(true)
+    force.rf[Animal, Option[String]](animalFields.name).filterWith(_.isEmpty).verify(casimir) should be(false)
+  }
+
+  it should "work with a subfield" in {
+    val f1 = force.rf[Animal, Option[String]](animalFields.name).filterEq(Some("Casimir"))
+    val f = force.rf[Animal, Animal](animalFields.itself).filter(f1)
+    f.verify(casimir) should be(true)
+    f.verify(rex) should be(false)
+  }
+
+  "Composed filter" should "work with basic filters" in {
+    val f = Filter.operation[String](_.size > 4) |@| Filter.operation[String](_.startsWith("H"))
+    f.verify("Hello") should be(true)
+    f.verify("Hi") should be(false)
+    f.verify("Bonjour") should be(false)
+  }
+
+  it should "work with field filters" in {
+    val f = force.rf[Animal, Long](animalFields.weight).filterEq(9) |@|
+      force.rf[Animal, String](animalFields.color).filterEq("brown")
+    f.verify(rex) should be (true)
+    f.verify(littleRex) should be (false)
+    f.verify(popa) should be (false)
   }
 }
