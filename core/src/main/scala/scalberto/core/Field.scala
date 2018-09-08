@@ -1,4 +1,4 @@
-package bismuth.core
+package scalberto.core
 
 import scala.reflect.ClassTag
 

@@ -1,4 +1,4 @@
-package bismuth.tests
+package scalberto.tests
 
 object Models {
 

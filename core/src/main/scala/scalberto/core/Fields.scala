@@ -1,3 +1,3 @@
-package bismuth.core
+package scalberto.core
 
 trait Fields[-Source]

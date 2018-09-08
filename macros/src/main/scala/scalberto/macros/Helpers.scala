@@ -1,6 +1,6 @@
-package bismuth.macros
+package scalberto.macros
 
-import bismuth.macros.checks.Checkers
+import scalberto.macros.checks.Checkers
 
 import scala.reflect.macros.whitebox
 

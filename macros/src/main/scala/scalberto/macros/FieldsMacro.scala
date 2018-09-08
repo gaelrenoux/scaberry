@@ -1,6 +1,6 @@
-package bismuth.macros
+package scalberto.macros
 
-import bismuth.core.Fields
+import scalberto.core.Fields
 
 object FieldsMacro {
 

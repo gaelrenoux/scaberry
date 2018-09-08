@@ -1,9 +1,9 @@
-package bismuth.tests
+package scalberto.tests
 
-import bismuth.core.{Field, Filter}
-import bismuth.macros.FieldsMacro
-import bismuth.tests.Models._
+import Models._
 import org.scalatest.{FlatSpec, Matchers}
+import scalberto.core.Filter
+import scalberto.macros.FieldsMacro
 
 class FilterSpec extends FlatSpec with Matchers with Helpers {
 

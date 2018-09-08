@@ -1,4 +1,4 @@
-import bismuth.core._
+import scalberto.core.{Field, Fields, Filter, Update}
 
 object Samples {
 

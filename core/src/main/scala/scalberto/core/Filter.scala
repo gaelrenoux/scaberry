@@ -1,6 +1,6 @@
-package bismuth.core
+package scalberto.core
 
-import bismuth.core.Filter.Composed
+import Filter.Composed
 
 sealed trait Filter[-Target] extends Function1[Target, Boolean] {
 

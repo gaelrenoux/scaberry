@@ -1,4 +1,4 @@
-package bismuth.macros.checks
+package scalberto.macros.checks
 
 import scala.reflect.macros.whitebox
 

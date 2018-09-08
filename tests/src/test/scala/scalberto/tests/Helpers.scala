@@ -1,7 +1,7 @@
-package bismuth.tests
+package scalberto.tests
 
-import bismuth.core.Field
 import Models._
+import scalberto.core.Field
 
 trait Helpers {
   object force {

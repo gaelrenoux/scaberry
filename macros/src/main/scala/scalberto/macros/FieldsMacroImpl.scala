@@ -1,6 +1,6 @@
-package bismuth.macros
+package scalberto.macros
 
-import bismuth.core.Fields
+import scalberto.core.Fields
 
 import scala.reflect.macros.whitebox
 
@@ -24,7 +24,7 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
 
     val tree =
       q"""
-        new bismuth.core.Fields[$srcTpe] {
+        new scalberto.core.Fields[$srcTpe] {
           ..$fieldsContent
         }
       """
@@ -45,17 +45,17 @@ class FieldsMacroImpl(val c: whitebox.Context) extends Helpers with Debug {
       bool
     } match {
       case None =>
-        (q"bismuth.core.Field.NoCopier", tq"bismuth.core.Field.NoCopier.type")
+        (q"scalberto.core.Field.NoCopier", tq"scalberto.core.Field.NoCopier.type")
       case Some(_) =>
-        (q"{ (src: $srcTpe, a: $typ) => src.copy($name = a) }", tq"bismuth.core.Field.Copier[$srcTpe, $typ]")
+        (q"{ (src: $srcTpe, a: $typ) => src.copy($name = a) }", tq"scalberto.core.Field.Copier[$srcTpe, $typ]")
     }
 
-    val (setter, setterTpe) = (q"bismuth.core.Field.NoSetter", tq"bismuth.core.Field.NoSetter.type")
+    val (setter, setterTpe) = (q"scalberto.core.Field.NoSetter", tq"scalberto.core.Field.NoSetter.type")
 
     debug(s"Writing field instance for $srcTpe.$name with $copierTpe and $setterTpe")
 
     q"""
-        val $name = new bismuth.core.Field[$srcTpe, $typ, $copierTpe, $setterTpe](Symbol($nameAsLiteral), _.$name, $copier, $setter)
+        val $name = new scalberto.core.Field[$srcTpe, $typ, $copierTpe, $setterTpe](Symbol($nameAsLiteral), _.$name, $copier, $setter)
     """
   }
 

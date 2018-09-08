@@ -4,7 +4,7 @@ val V = new {
   val scala = "2.12.4"
 }
 
-name := "bismuth"
+name := "scalberto"
 version := "1.0-SNAPSHOT"
 
 lazy val commonSettings = Seq(
@@ -50,7 +50,7 @@ lazy val tests = project //(project in file("tests"))
   .dependsOn(core, macros)
   .settings(
     commonSettings,
-      scalacOptions += "-Dbismuth.macro.debug=true",
+      scalacOptions += "-Dscalberto.macro.debug=true",
   )
 
 lazy val all = (project in file(".")).aggregate(core, macros, tests)

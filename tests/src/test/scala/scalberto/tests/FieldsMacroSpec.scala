@@ -1,9 +1,9 @@
-package bismuth.tests
+package scalberto.tests
 
-import bismuth.core.Field
-import bismuth.macros.FieldsMacro
-import bismuth.tests.Models._
+import Models._
 import org.scalatest.{FlatSpec, Matchers}
+import scalberto.core.Field
+import scalberto.macros.FieldsMacro
 
 import scala.reflect.ClassTag
 

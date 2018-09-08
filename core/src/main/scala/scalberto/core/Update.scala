@@ -1,4 +1,4 @@
-package bismuth.core
+package scalberto.core
 
 trait Update[Target] extends Function1[Target, Target] {
 
