@@ -1,6 +1,6 @@
 package scalberto.tests
 
-import Models._
+import scalberto.tests.data._
 import scalberto.core.Field
 
 trait Helpers {

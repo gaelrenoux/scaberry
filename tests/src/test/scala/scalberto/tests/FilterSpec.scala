@@ -1,6 +1,6 @@
 package scalberto.tests
 
-import Models._
+import scalberto.tests.data._
 import org.scalatest.{FlatSpec, Matchers}
 import scalberto.core.Filter
 import scalberto.macros.FieldsMacro
