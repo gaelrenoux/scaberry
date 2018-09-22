@@ -4,6 +4,9 @@ import sbt.Keys.{scalacOptions, _}
 val V = new {
   val scala = "2.12.4"
 
+  val scalameta = "1.8.0"
+  val scalametaParadise = "3.0.0-M11"
+
   val scalaLogging = "3.5.0"
   val logback = "1.1.7"
 
@@ -34,12 +37,18 @@ lazy val commonSettings = Seq(
   )
 )
 
-lazy val macroDefSettings = Seq(
+lazy val macroParadiseSettings = Seq(
+  addCompilerPlugin("org.scalameta" % "paradise" % V.scalametaParadise cross CrossVersion.full),
+  scalacOptions ++= Seq("-language:experimental.macros", "-Xplugin-require:macroparadise"),
+  scalacOptions in(Compile, console) ~= (_ filterNot (_ contains "paradise")), // macroparadise plugin doesn't work in repl
+)
+
+lazy val macroDefSettings = macroParadiseSettings ++ Seq(
   libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-reflect" % V.scala
+    "org.scala-lang" % "scala-reflect" % V.scala,
+    "org.scalameta" %% "scalameta" % V.scalameta
   ),
   scalacOptions ++= Seq(
-    "-language:experimental.macros",
     "-Dscalberto.macro.debug=true"
   )
 )
@@ -53,6 +62,6 @@ lazy val macros = project // (project in file("macros"))
 
 lazy val tests = project //(project in file("tests"))
   .dependsOn(core, macros)
-  .settings(commonSettings)
+  .settings(commonSettings, macroParadiseSettings)
 
 lazy val all = (project in file(".")).aggregate(core, macros, tests)
