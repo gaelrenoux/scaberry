@@ -1,7 +1,5 @@
 package scalberto.tests.data
 
-import scalberto.macros.FieldsMacro
-
 
 trait Animal {
 
@@ -20,8 +18,4 @@ trait Animal {
   def unary() = 42
 
   def parameterized[A]: Nothing = ???
-}
-
-object Animal {
-  val publicFields = FieldsMacro.fromPublic[Animal]
 }

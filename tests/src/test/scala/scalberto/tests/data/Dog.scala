@@ -1,7 +1,10 @@
 package scalberto.tests.data
 
-import scalberto.macros.{FieldsMacro, MetaMacro}
+import scalberto.core.CopyableField
+import scalberto.macros.{CopyableMeta, scaffield}
 
+
+@scaffield
 case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Animal {
   val owner: String = "Unknown"
 
@@ -19,10 +22,21 @@ case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Anim
 }
 
 object Dog {
-  val fields = FieldsMacro.from[Dog]
-  val publicFields = FieldsMacro.fromPublic[Dog]
-  val constructorFields = FieldsMacro.fromConstructor[Dog]
 
-  val meta = MetaMacro.from[Dog]
-  val x = meta.field(_.color)
+  object manualMeta extends CopyableMeta[Dog] {
+
+    object fields {
+      val color: CopyableField[Dog, String] = new CopyableField[Dog, String]('color, _.color, (src, c) => src.copy(color = c))
+      val weight: CopyableField[Dog, Long] = new CopyableField[Dog, Long]('weight, _.weight, (src, w) => src.copy(weight = w))
+      val name: CopyableField[Dog, Some[String]] = new CopyableField[Dog, Some[String]]('name, _.name, (src, n) => src.copy(name = n))
+    }
+
+    val orderedFields: Seq[CopyableField[Dog, _]] = Seq(fields.color, fields.weight, fields.name)
+
+    val a: Map[Symbol, Seq[CopyableField[Dog, _]]] = orderedFields.groupBy(_.name)
+    val b = a.map { case (k, v) => (k, v.head) }
+
+    val fieldsMap = orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
+  }
+
 }

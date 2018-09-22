@@ -1,9 +1,10 @@
 package scalberto.tests
 
-import scalberto.tests.data._
 import scalberto.core.{CopyableField, Field}
+import scalberto.tests.data._
 
 trait Helpers {
+
   object force {
     /** Readable field */
     def rf[Source, Type](a: Any): Field[Source, Type] = a.asInstanceOf[Field[Source, Type]]
@@ -17,4 +18,5 @@ trait Helpers {
     /** Animal readable field */
     def dcf[A](a: Any): CopyableField[Dog, A] = cf[Dog, A](a)
   }
+
 }

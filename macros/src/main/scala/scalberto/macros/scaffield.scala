@@ -9,42 +9,70 @@ class scaffield extends StaticAnnotation {
 
   inline def apply(defn: Any): Any = meta {
 
-    def isCaseClass(clazz: Defn.Class): Boolean = clazz.mods.exists(_.isInstanceOf[Mod.Case])
-
-    val (clz, companion) = defn match {
-      case Term.Block(List(cls: Defn.Class, companion: Defn.Object)) if isCaseClass(cls) => (cls, companion)
-      case cls: Defn.Class if isCaseClass(cls) => (cls, q"object ${Term.Name(cls.name.value)}")
-      //case _ => abort("@Metadata must annotate an case class")
+    val (clazz, companion) = defn match {
+      case Term.Block(List(cls: Defn.Class, companion: Defn.Object)) => (cls, companion)
+      case cls: Defn.Class => (cls, q"object ${Term.Name(cls.name.value)}")
+      case _ => abort(defn.pos, "@Metadata must annotate a class or case class")
     }
-    val srcTpe = clz.name
-    val fieldTerms = clz.ctor.paramss.flatten
 
-    val (scafieldNames, scafieldDecls) = fieldTerms.map { field =>
+    val isCopyable = clazz.mods.exists(_.isInstanceOf[Mod.Case])
+    val srcTpe = clazz.name
+
+    val fieldTerms = clazz.ctor.paramss.flatten
+
+    val (scaffieldNames, scaffieldDecls) = fieldTerms.map { field =>
       val fNameValueString = field.name.value
       val fName = Term.Name(fNameValueString)
       val fType = field.decltpe.get.asInstanceOf[Type]
       val fNameSym = Lit.Symbol(scala.Symbol(fName.value))
 
-      val copier = q"{ (src: $srcTpe, a: $fType) => src.copy($fName = a) }"
-      val scafield = q"val ${Pat.Var.Term(fName)} = new scalberto.core.CopyableField[$srcTpe, $fType]($fNameSym, _.$fName, $copier)"
+      val scaffield = if (isCopyable) {
+        val copier = q"(src: $srcTpe, a: $fType) => src.copy($fName = a)"
+        q"""
+          val ${Pat.Var.Term(fName)}: scalberto.core.CopyableField[$srcTpe, $fType] =
+            new scalberto.core.CopyableField[$srcTpe, $fType]($fNameSym, _.$fName, $copier)
+          """
 
-      (fName, scafield)
+      } else {
+        q"""
+          val ${Pat.Var.Term(fName)}: scalberto.core.Field[$srcTpe, $fType] =
+            new scalberto.core.Field[$srcTpe, $fType]($fNameSym, _.$fName)"""
+      }
+
+      (fName, scaffield)
     }.unzip
 
-    val qualifiedScafieldNames = scafieldNames.map(n => q"fields.$n")
+    val qualifiedScaffieldNames = scaffieldNames.map(n => q"fields.$n")
 
     val metaObject =
-      q"""
-         object meta {
-           object fields {
-             ..$scafieldDecls
-           }
+      if (isCopyable)
+        q"""
+          object meta extends scalberto.macros.CopyableMeta[$srcTpe] {
+            object fields {
+              ..$scaffieldDecls
+            }
 
-           val orderedFields = Seq(..$qualifiedScafieldNames)
+            val orderedFields: Seq[scalberto.core.CopyableField[$srcTpe, _]] =
+              Seq(..$qualifiedScaffieldNames)
 
-           val fieldsMap = orderedFields.groupBy(_.name)
-         }
-       """
+            val fieldsMap: Map[scala.Symbol, scalberto.core.CopyableField[$srcTpe, _]] =
+              orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
+          }
+        """
+      else
+        q"""
+          object meta extends scalberto.macros.Meta[$srcTpe] {
+            object fields {
+              ..$scaffieldDecls
+            }
+
+            val orderedFields: Seq[scalberto.core.Field[$srcTpe, _]] =
+              Seq(..$qualifiedScaffieldNames)
+
+            val fieldsMap: Map[scala.Symbol, scalberto.core.Field[$srcTpe, _]] =
+              orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
+          }
+        """
 
     val newCompanion = companion.copy(
       templ = companion.templ.copy(
@@ -52,7 +80,6 @@ class scaffield extends StaticAnnotation {
       )
     )
 
-    q"$clz; $newCompanion"
-
+    q"$clazz; $newCompanion"
   }
 }

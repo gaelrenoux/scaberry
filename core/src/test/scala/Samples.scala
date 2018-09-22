@@ -4,8 +4,8 @@ object Samples {
 
   case class Person(name: String, age: Long)
 
-  val nameCopier: (Person, String) => Person =  { (p, n) => p.copy(name = n) }
-  val ageCopier: (Person, Long) => Person =  { (p, a) => p.copy(age = a) }
+  val nameCopier: (Person, String) => Person = { (p, n) => p.copy(name = n) }
+  val ageCopier: (Person, Long) => Person = { (p, a) => p.copy(age = a) }
 
   object PersonFields {
     val name = new CopyableField[Person, String]('name, _.name, nameCopier)

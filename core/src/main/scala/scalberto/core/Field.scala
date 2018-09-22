@@ -7,10 +7,10 @@ import scala.reflect.ClassTag
 
 /** A field on a type. */
 class Field[-Source, Type](val name: Symbol,
-                          private val getter: Source => Type
-                         )(implicit
-                           val typeClassTag: ClassTag[Type]
-                         ) {
+                           private val getter: Source => Type
+                          )(implicit
+                            val typeClassTag: ClassTag[Type]
+                          ) {
 
   def apply[Target <: Source](target: Target): Field.Application[Type] =
     new Field.Application[Type](getter(target))
@@ -59,7 +59,7 @@ class CopyableField[Source, Type](name: Symbol,
 
 object Field {
   type Getter[-Source, +Type] = Source => Type
-  type Copier[Source, -Type] = (Source, Type) => Source
+  type Copier[Source, -Type] = Function2[Source, Type, Source]
 
   /** Application of the field to a specific instance. */
   class Application[Type](wrapped: => Type) {
