@@ -1,4 +1,4 @@
-import scalberto.core.{CopyableField, Field, Filter, Update}
+import scalberto.core.{CopyableField, Filter, Update}
 
 object Samples {
 
