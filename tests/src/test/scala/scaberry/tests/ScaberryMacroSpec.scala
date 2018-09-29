@@ -1,19 +1,19 @@
-package scalberto.tests
+package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scalberto.macros.scaffield
-import scalberto.tests.data.{Animal, Dog}
+import scaberry.macros.scaberry
+import scaberry.tests.data.{Animal, Dog}
 
 import scala.reflect.ClassTag
 
-class ScaffieldMacroSpec extends FlatSpec with Matchers {
+class ScaberryMacroSpec extends FlatSpec with Matchers {
 
   "the meta object" should "be created with the default name if none is given" in {
     "Dog.meta" should compile
   }
 
   /* it should "be created with a custom name if one is given" in {
-    @scaffield('meow)
+    @scaberry('meow)
     case class Cat(color: String)
     "Cat.meow" should compile
     "Cat.meta" shouldNot typeCheck
@@ -26,7 +26,7 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers {
   }
 
   it should "not return fields from another constructor" in {
-    @scaffield
+    @scaberry
     case class Cat(color: String) {
       def this(other: Cat) = this(other.color)
     }
@@ -115,9 +115,9 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers {
     //"val x: CopyableField[Dog, Some[String]] = Dog.publicFields.name" should compile
     //"val x: CopyableField[Dog, Long] = Dog.publicFields.weight" should compile
     //"val x: Field[Dog, String] = Dog.publicFields.owner" should compile
-    "val x: scalberto.core.CopyableField[Dog, String] = Dog.meta.fields.color" should compile
-    "val x: scalberto.core.CopyableField[Dog, Some[String]] = Dog.meta.fields.name" should compile
-    "val x: scalberto.core.CopyableField[Dog, Long] = Dog.meta.fields.weight" should compile
+    "val x: scaberry.core.CopyableField[Dog, String] = Dog.meta.fields.color" should compile
+    "val x: scaberry.core.CopyableField[Dog, Some[String]] = Dog.meta.fields.name" should compile
+    "val x: scaberry.core.CopyableField[Dog, Long] = Dog.meta.fields.weight" should compile
   }
 
   they should "carry the correct name" in {

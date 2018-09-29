@@ -1,4 +1,4 @@
-package scalberto.macros.helpers
+package scaberry.macros.helpers
 
 import scala.meta._
 

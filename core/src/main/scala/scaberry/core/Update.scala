@@ -1,7 +1,7 @@
-package scalberto.core
+package scaberry.core
 
-import scalberto.core.Field.{Copier, Getter}
-import scalberto.core.Update._
+import scaberry.core.Field.{Copier, Getter}
+import scaberry.core.Update._
 
 /** An update on a target object. */
 trait Update[Target] extends Function1[Target, Target] {

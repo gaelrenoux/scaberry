@@ -1,6 +1,6 @@
-package scalberto.macros
+package scaberry.macros
 
-import scalberto.core.{CopyableField, Field}
+import scaberry.core.{CopyableField, Field}
 
 trait Meta[Source] {
 

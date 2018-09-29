@@ -1,52 +1,52 @@
-package scalberto.macros
+package scaberry.macros
 
 import scala.annotation._
 import scala.meta._
 
 /** Put the annotation on the case class to generate the meta-object on the companion. */
 @compileTimeOnly("Should be used only in compile time.")
-class scaffield extends StaticAnnotation {
+class scaberry extends StaticAnnotation {
 
   inline def apply(defn: Any): Any = meta {
 
     val (clazz, companion) = defn match {
       case Term.Block(List(cls: Defn.Class, companion: Defn.Object)) => (cls, companion)
       case cls: Defn.Class => (cls, q"object ${Term.Name(cls.name.value)}")
-      case _ => abort(defn.pos, "@scaffield must annotate a class or case class")
+      case _ => abort(defn.pos, "@scaberry must annotate a class or case class")
     }
 
     val isCopyable = clazz.mods.exists(_.isInstanceOf[Mod.Case])
     val srcTpe = clazz.name
-    val (scaffieldNames, scaffieldDeclarations) = Fields.namesAndDeclarations(clazz, isCopyable)
+    val (sbNames, sbDeclarations) = SbFields.namesAndDeclarations(clazz, isCopyable)
 
-    val qualifiedScaffieldNames = scaffieldNames.map(n => q"fields.$n")
+    val qualifiedSbNames = sbNames.map(n => q"fields.$n")
     val metaObjectName = Term.Name("meta")
     val metaObject =
       if (isCopyable)
         q"""
-          object $metaObjectName extends scalberto.macros.CopyableMeta[$srcTpe] {
+          object $metaObjectName extends scaberry.macros.CopyableMeta[$srcTpe] {
             object fields {
-              ..$scaffieldDeclarations
+              ..$sbDeclarations
             }
 
-            val orderedFields: Seq[scalberto.core.CopyableField[$srcTpe, _]] =
-              Seq(..$qualifiedScaffieldNames)
+            val orderedFields: Seq[scaberry.core.CopyableField[$srcTpe, _]] =
+              Seq(..$qualifiedSbNames)
 
-            val fieldsMap: Map[scala.Symbol, scalberto.core.CopyableField[$srcTpe, _]] =
+            val fieldsMap: Map[scala.Symbol, scaberry.core.CopyableField[$srcTpe, _]] =
               orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
           }
         """
       else
         q"""
-          object meta extends scalberto.macros.Meta[$srcTpe] {
+          object meta extends scaberry.macros.Meta[$srcTpe] {
             object fields {
-              ..$scaffieldDeclarations
+              ..$sbDeclarations
             }
 
-            val orderedFields: Seq[scalberto.core.Field[$srcTpe, _]] =
-              Seq(..$qualifiedScaffieldNames)
+            val orderedFields: Seq[scaberry.core.Field[$srcTpe, _]] =
+              Seq(..$qualifiedSbNames)
 
-            val fieldsMap: Map[scala.Symbol, scalberto.core.Field[$srcTpe, _]] =
+            val fieldsMap: Map[scala.Symbol, scaberry.core.Field[$srcTpe, _]] =
               orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
           }
         """

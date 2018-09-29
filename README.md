@@ -1,5 +1,5 @@
-# scAlberto
+# Scaberry fields forever
 
-Secondary constructors does not stop the @scaffield annotation from
+Secondary constructors does not stop the @scaberry annotation from
 working, but it makes it marked as a compilation error in IntelliJ (not
 confirmed with other IDEs).

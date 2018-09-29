@@ -1,7 +1,7 @@
-package scalberto.core
+package scaberry.core
 
-import scalberto.core.Field.Getter
-import scalberto.core.Filter._
+import scaberry.core.Field.Getter
+import scaberry.core.Filter._
 
 /** A filter on a target object. */
 sealed trait Filter[-Target] extends Function1[Target, Boolean] {

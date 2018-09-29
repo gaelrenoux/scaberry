@@ -13,7 +13,7 @@ val V = new {
   val scalatest = "3.0.1"
 }
 
-name := "scalberto"
+name := "scaberry"
 version := "1.0-SNAPSHOT"
 
 lazy val commonSettings = Seq(
@@ -49,7 +49,7 @@ lazy val macroDefSettings = macroParadiseSettings ++ Seq(
     "org.scalameta" %% "scalameta" % V.scalameta
   ),
   scalacOptions ++= Seq(
-    "-Dscalberto.macro.debug=true"
+    "-Dscaberry.macro.debug=true"
   )
 )
 

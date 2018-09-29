@@ -1,8 +1,8 @@
-package scalberto.tests
+package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scalberto.core.Filter
-import scalberto.tests.data._
+import scaberry.core.Filter
+import scaberry.tests.data._
 
 class FilterSpec extends FlatSpec with Matchers {
 

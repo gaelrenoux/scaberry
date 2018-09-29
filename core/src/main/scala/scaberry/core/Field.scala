@@ -1,6 +1,6 @@
-package scalberto.core
+package scaberry.core
 
-import scalberto.core.Field.Copier
+import scaberry.core.Field.Copier
 
 import scala.reflect.ClassTag
 

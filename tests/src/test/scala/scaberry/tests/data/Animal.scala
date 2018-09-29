@@ -1,4 +1,4 @@
-package scalberto.tests.data
+package scaberry.tests.data
 
 
 trait Animal {
