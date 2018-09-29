@@ -1,23 +1,23 @@
 package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scaberry.macros.scaberry
+import scaberry.macros.berry
 import scaberry.tests.data.{Animal, Dog}
 
 import scala.reflect.ClassTag
 
-class ScaberryMacroSpec extends FlatSpec with Matchers {
+class BerryMacroSpec extends FlatSpec with Matchers {
 
   "the meta object" should "be created with the default name if none is given" in {
     "Dog.meta" should compile
   }
 
-  /* it should "be created with a custom name if one is given" in {
-    @scaberry('meow)
+  it should "be created with a custom name if one is given" in {
+    @berry('meow)
     case class Cat(color: String)
     "Cat.meow" should compile
     "Cat.meta" shouldNot typeCheck
-  } */
+  }
 
   "default selector on case classes" should "return the fields in the primary constructor" in {
     "Dog.meta.fields.name" should compile
@@ -26,7 +26,7 @@ class ScaberryMacroSpec extends FlatSpec with Matchers {
   }
 
   it should "not return fields from another constructor" in {
-    @scaberry
+    @berry
     case class Cat(color: String) {
       def this(other: Cat) = this(other.color)
     }

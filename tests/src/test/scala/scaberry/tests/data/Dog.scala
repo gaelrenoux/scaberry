@@ -1,10 +1,10 @@
 package scaberry.tests.data
 
 import scaberry.core.CopyableField
-import scaberry.macros.{CopyableMeta, scaberry}
+import scaberry.macros.{CopyableMeta, berry}
 
 
-@scaberry
+@berry
 case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Animal {
   val owner: String = "Unknown"
 

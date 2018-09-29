@@ -1,18 +1,27 @@
 package scaberry.macros
 
+import scaberry.macros.helpers.Log
+
 import scala.annotation._
 import scala.meta._
 
 /** Put the annotation on the case class to generate the meta-object on the companion. */
 @compileTimeOnly("Should be used only in compile time.")
-class scaberry extends StaticAnnotation {
+class berry(name: scala.Symbol = 'meta) extends StaticAnnotation {
 
   inline def apply(defn: Any): Any = meta {
 
     val (clazz, companion) = defn match {
       case Term.Block(List(cls: Defn.Class, companion: Defn.Object)) => (cls, companion)
       case cls: Defn.Class => (cls, q"object ${Term.Name(cls.name.value)}")
-      case _ => abort(defn.pos, "@scaberry must annotate a class or case class")
+      case _ => abort(defn.pos, "@berry must annotate a class or case class")
+    }
+
+    val berryName = this match {
+      case q"new $_()" => "meta"
+      case q"new $_(${Lit(n: scala.Symbol)})" => n.toString
+      case q"new $_(scala.Symbol(${Lit(n: String)}))" => n
+      case _ => abort("@berry parameters should be literals")
     }
 
     val isCopyable = clazz.mods.exists(_.isInstanceOf[Mod.Case])
@@ -20,7 +29,7 @@ class scaberry extends StaticAnnotation {
     val (sbNames, sbDeclarations) = SbFields.namesAndDeclarations(clazz, isCopyable)
 
     val qualifiedSbNames = sbNames.map(n => q"fields.$n")
-    val metaObjectName = Term.Name("meta")
+    val metaObjectName = Term.Name(berryName)
     val metaObject =
       if (isCopyable)
         q"""
