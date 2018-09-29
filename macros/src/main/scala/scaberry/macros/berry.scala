@@ -7,7 +7,7 @@ import scala.meta._
 
 /** Put the annotation on the case class to generate the meta-object on the companion. */
 @compileTimeOnly("Should be used only in compile time.")
-class berry(name: scala.Symbol = 'meta) extends StaticAnnotation {
+class berry(val name: scala.Symbol = 'meta) extends StaticAnnotation {
 
   inline def apply(defn: Any): Any = meta {
 
@@ -33,7 +33,7 @@ class berry(name: scala.Symbol = 'meta) extends StaticAnnotation {
     val metaObject =
       if (isCopyable)
         q"""
-          object $metaObjectName extends scaberry.macros.CopyableMeta[$srcTpe] {
+          object $metaObjectName extends scaberry.macros.CaseMeta[$srcTpe] {
             object fields {
               ..$sbDeclarations
             }
@@ -47,7 +47,7 @@ class berry(name: scala.Symbol = 'meta) extends StaticAnnotation {
         """
       else
         q"""
-          object meta extends scaberry.macros.Meta[$srcTpe] {
+          object $metaObjectName extends scaberry.macros.Meta[$srcTpe] {
             object fields {
               ..$sbDeclarations
             }
@@ -65,6 +65,7 @@ class berry(name: scala.Symbol = 'meta) extends StaticAnnotation {
         stats = Some(companion.templ.stats.getOrElse(Nil) :+ metaObject)
       )
     )
+    Log.debug(newCompanion.toString)
 
     q"$clazz; $newCompanion"
   }

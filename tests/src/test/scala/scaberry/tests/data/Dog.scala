@@ -1,7 +1,7 @@
 package scaberry.tests.data
 
 import scaberry.core.CopyableField
-import scaberry.macros.{CopyableMeta, berry}
+import scaberry.macros.{CaseMeta, berry}
 
 
 @berry
@@ -21,7 +21,7 @@ case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Anim
 
 object Dog {
 
-  object manualMeta extends CopyableMeta[Dog] {
+  object manualMeta extends CaseMeta[Dog] {
 
     object fields {
       val color: CopyableField[Dog, String] = new CopyableField[Dog, String]('color, _.color, (src, c) => src.copy(color = c))

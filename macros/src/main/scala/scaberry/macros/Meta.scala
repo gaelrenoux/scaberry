@@ -10,7 +10,7 @@ trait Meta[Source] {
 
 }
 
-trait CopyableMeta[Source] extends Meta[Source] {
+trait CaseMeta[Source] extends Meta[Source] {
 
   val orderedFields: Seq[CopyableField[Source, _]]
 
