@@ -17,8 +17,6 @@ case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Anim
   def unary2() = 42
 
   def parameterized2[A]: Nothing = ???
-
-  def this(other: Dog) = this(other.color, other.weight, other.name)
 }
 
 object Dog {

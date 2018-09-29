@@ -1,12 +1,23 @@
 package scalberto.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scalberto.core.{CopyableField, Field}
+import scalberto.macros.scaffield
 import scalberto.tests.data.{Animal, Dog}
 
 import scala.reflect.ClassTag
 
-class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
+class ScaffieldMacroSpec extends FlatSpec with Matchers {
+
+  "the meta object" should "be created with the default name if none is given" in {
+    "Dog.meta" should compile
+  }
+
+  /* it should "be created with a custom name if one is given" in {
+    @scaffield('meow)
+    case class Cat(color: String)
+    "Cat.meow" should compile
+    "Cat.meta" shouldNot typeCheck
+  } */
 
   "default selector on case classes" should "return the fields in the primary constructor" in {
     "Dog.meta.fields.name" should compile
@@ -15,7 +26,12 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
   }
 
   it should "not return fields from another constructor" in {
-    "Dog.meta.fields.other" shouldNot typeCheck
+    @scaffield
+    case class Cat(color: String) {
+      def this(other: Cat) = this(other.color)
+    }
+    "Cat.meta.fields.color" should compile
+    "Cat.meta.fields.other" shouldNot typeCheck
   }
 
   it should "not return other vals" in {
@@ -99,9 +115,9 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
     //"val x: CopyableField[Dog, Some[String]] = Dog.publicFields.name" should compile
     //"val x: CopyableField[Dog, Long] = Dog.publicFields.weight" should compile
     //"val x: Field[Dog, String] = Dog.publicFields.owner" should compile
-    "val x: CopyableField[Dog, String] = Dog.meta.fields.color" should compile
-    "val x: CopyableField[Dog, Some[String]] = Dog.meta.fields.name" should compile
-    "val x: CopyableField[Dog, Long] = Dog.meta.fields.weight" should compile
+    "val x: scalberto.core.CopyableField[Dog, String] = Dog.meta.fields.color" should compile
+    "val x: scalberto.core.CopyableField[Dog, Some[String]] = Dog.meta.fields.name" should compile
+    "val x: scalberto.core.CopyableField[Dog, Long] = Dog.meta.fields.weight" should compile
   }
 
   they should "carry the correct name" in {
@@ -113,9 +129,9 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
     //force.arf(Dog.publicFields.owner).name.name should be("owner")
     //force.arf(Dog.publicFields.otherName).name.name should be("otherName")
     //force.arf(Dog.publicFields.otherOtherName).name.name should be("otherOtherName")
-    force.arf(Dog.meta.fields.color).name.name should be("color")
-    force.arf(Dog.meta.fields.name).name.name should be("name")
-    force.arf(Dog.meta.fields.weight).name.name should be("weight")
+    Dog.meta.fields.color.name.name should be("color")
+    Dog.meta.fields.name.name.name should be("name")
+    Dog.meta.fields.weight.name.name should be("weight")
   }
 
   they should "carry the correct class tags" in {
@@ -127,9 +143,9 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
     //force.arf(Dog.publicFields.owner).typeClassTag should be(implicitly[ClassTag[String]])
     //force.arf(Dog.publicFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
     //force.arf(Dog.publicFields.otherOtherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    force.arf(Dog.meta.fields.color).typeClassTag should be(implicitly[ClassTag[String]])
-    force.arf(Dog.meta.fields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    force.arf(Dog.meta.fields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
+    Dog.meta.fields.color.typeClassTag should be(implicitly[ClassTag[String]])
+    Dog.meta.fields.name.typeClassTag should be(implicitly[ClassTag[Some[String]]])
+    Dog.meta.fields.weight.typeClassTag should be(implicitly[ClassTag[Long]])
   }
 
 
@@ -160,9 +176,9 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
   "Copiers" should "return the correct value" in {
     //force.dcf[Some[String]](Dog.publicFields.name)(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
     //force.dcf[Long](Dog.publicFields.weight)(rex).copy(12L) should be(rex.copy(weight = 12L))
-    force.dcf[String](Dog.meta.fields.color)(rex).copy("black") should be(rex.copy(color = "black"))
-    force.dcf[Some[String]](Dog.meta.fields.name)(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
-    force.dcf[Long](Dog.meta.fields.weight)(rex).copy(12L) should be(rex.copy(weight = 12L))
+    Dog.meta.fields.color(rex).copy("black") should be(rex.copy(color = "black"))
+    Dog.meta.fields.name(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
+    Dog.meta.fields.weight(rex).copy(12L) should be(rex.copy(weight = 12L))
   }
 
   they should "expect the correct type" in {
@@ -177,8 +193,6 @@ class ScaffieldMacroSpec extends FlatSpec with Matchers with Helpers {
     //"Animal.publicFields.name(casimir).copy(None)" shouldNot typeCheck
     //"Animal.publicFields.weight(casimir).copy(42L)" shouldNot typeCheck
   }
-
-
 
 
 }
