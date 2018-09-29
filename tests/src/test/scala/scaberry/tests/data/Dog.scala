@@ -1,11 +1,15 @@
 package scaberry.tests.data
 
 import scaberry.core.CopyableField
-import scaberry.macros.{CaseMeta, berry}
+import scaberry.macros.{CaseMeta, berry, berryProp}
 
 
 @berry
-case class Dog(color: String, weight: Long = 1, name: Some[String]) extends Animal {
+case class Dog(
+                color: String,
+                weight: Long = 1,
+                @berryProp('label, "Pet's name") @berryProp('other, "Other") name: Some[String]
+              ) extends Animal {
   val owner: String = "Unknown"
 
   private val genus = "canis" //unused but needed for test
