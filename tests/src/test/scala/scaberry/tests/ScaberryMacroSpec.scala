@@ -2,7 +2,7 @@ package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
 import scaberry.macros.scaberry
-import scaberry.tests.data.{Animal, Dog}
+import _root_.scaberry.tests.data.{Animal, Dog}
 
 import scala.reflect.ClassTag
 
