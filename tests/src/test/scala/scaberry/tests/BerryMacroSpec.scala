@@ -1,6 +1,7 @@
 package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
+import scaberry.macros.berryProp
 import scaberry.tests.data._
 
 import scala.reflect.ClassTag
@@ -187,6 +188,28 @@ class BerryMacroSpec extends FlatSpec with Matchers {
     //"Animal.publicFields.weight(casimir).copy(42L)" shouldNot typeCheck
   }
 
+  "Annotations" should "be there if declared" in {
+    Dog.meta.fields.color.annotations.get[priority].map(_.level) should be(Some(10))
+    Dog.meta.fields.name.annotations.get[label].map(_.value) should be(Some("Pet's name"))
+  }
 
+  they should "be missing if not declared" in {
+    Dog.meta.fields.color.annotations.get[label] should be(None)
+  }
+
+  they should "prioritize the first one if the same one is declared multiple times" in {
+    Dog.meta.fields.name.annotations.get[berryProp] should be(Some(berryProp('label, "Pet's name")))
+  }
+
+  they should "display all occurrences if the same one is declared multiple times" in {
+    Dog.meta.fields.name.annotations.getList[berryProp] should be(Seq(berryProp('label, "Pet's name"), berryProp('other, "Other")))
+  }
+
+  they should "be deconstructible" in {
+    val Some(berryProp(name, label)) = Dog.meta.fields.name.annotations.get[berryProp]
+    name.name should be("label")
+    label should be("Pet's name")
+  }
+  
 }
 

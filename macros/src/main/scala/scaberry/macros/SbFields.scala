@@ -3,6 +3,8 @@ package scaberry.macros
 import scala.collection.immutable.Seq
 import scala.meta._
 
+import scaberry.macros.helpers.{Unapply => U}
+
 object SbFields {
 
   def namesAndDeclarations(clazz: Defn.Class, isCopyable: Boolean): (Seq[Term.Name], Seq[Defn]) = {
@@ -18,17 +20,30 @@ object SbFields {
         case BerryProp(name, value) => q"""val ${Pat.Var.Term(Term.Name(name.name))} = ${Lit.String(value)}"""
       }
 
+      val annotations = fieldTerm.mods.collect {
+        case U.Annotation(name, args) => q"new ${Ctor.Name(name)}(..$args)"
+      }
+
       val sbField = if (isCopyable) {
         val copier = q"(src: $srcTpe, a: $fieldType) => src.copy($fieldName = a)"
         q"""
-          object $fieldName extends scaberry.core.CopyableField[$srcTpe, $fieldType]($fieldNameSym, _.$fieldName, $copier) {
+          object $fieldName extends scaberry.core.CopyableField[$srcTpe, $fieldType](
+            $fieldNameSym,
+            _.$fieldName,
+            $copier,
+            scaberry.core.TagMap(..$annotations)
+          ) {
             ..$fieldProps
           }
           """
 
       } else {
         q"""
-          object $fieldName extends scaberry.core.Field[$srcTpe, $fieldType]($fieldNameSym, _.$fieldName) {
+          object $fieldName extends scaberry.core.Field[$srcTpe, $fieldType](
+            $fieldNameSym,
+            _.$fieldName,
+            scaberry.core.TagMap(..$annotations)
+          ) {
             ..$fieldProps
           }
           """
@@ -39,7 +54,6 @@ object SbFields {
   }
 
   object BerryProp {
-    import scaberry.macros.helpers.{Unapply => U}
     private val BerryPropName = classOf[berryProp].getSimpleName
 
     def unapply(tree: Tree): Option[(scala.Symbol, String)] = tree match {

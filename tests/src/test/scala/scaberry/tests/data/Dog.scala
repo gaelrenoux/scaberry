@@ -6,9 +6,9 @@ import scaberry.macros.{CaseMeta, berry, berryProp}
 
 @berry
 case class Dog(
-                color: String,
+                @priority(10) color: String,
                 weight: Long = 1,
-                @berryProp('label, "Pet's name") @berryProp('other, "Other") name: Some[String]
+                @label("Pet's name") @berryProp('label, "Pet's name") @berryProp('other, "Other") name: Some[String]
               ) extends Animal {
   val owner: String = "Unknown"
 
@@ -25,7 +25,7 @@ case class Dog(
 
 object Dog {
 
-  object manualMeta extends CaseMeta[Dog] {
+  /*object manualMeta extends CaseMeta[Dog] {
 
     object fields {
       val color: CopyableField[Dog, String] = new CopyableField[Dog, String]('color, _.color, (src, c) => src.copy(color = c))
@@ -39,6 +39,6 @@ object Dog {
     val b = a.map { case (k, v) => (k, v.head) }
 
     val fieldsMap = orderedFields.groupBy(_.name).map { case (k, v) => (k, v.head) }.toMap
-  }
+  }*/
 
 }

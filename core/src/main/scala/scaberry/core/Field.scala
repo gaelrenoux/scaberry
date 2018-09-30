@@ -7,7 +7,8 @@ import scala.reflect.ClassTag
 
 /** A field on a type. */
 class Field[-Source, Type](val name: Symbol,
-                           private val getter: Source => Type
+                           private val getter: Source => Type,
+                           val annotations: TagMap = TagMap.Empty
                           )(implicit
                             val typeClassTag: ClassTag[Type]
                           ) {
@@ -34,10 +35,11 @@ class Field[-Source, Type](val name: Symbol,
 
 class CopyableField[Source, Type](name: Symbol,
                                   getter: Source => Type,
-                                  private[core] val copier: Copier[Source, Type]
+                                  private[core] val copier: Copier[Source, Type],
+                                  annotations: TagMap = TagMap.Empty
                                  )(implicit
                                    typeClassTag: ClassTag[Type]
-                                 ) extends Field[Source, Type](name, getter) {
+                                 ) extends Field[Source, Type](name, getter, annotations) {
 
   override def apply[Target <: Source](target: Target): Field.CopyableApplication[Source, Type] =
     new Field.CopyableApplication(getter(target), copier(target, _))
