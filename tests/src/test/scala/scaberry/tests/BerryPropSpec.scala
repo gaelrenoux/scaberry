@@ -1,10 +1,7 @@
 package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scaberry.macros.berry
-import scaberry.tests.data.{Animal, Dog}
-
-import scala.reflect.ClassTag
+import scaberry.tests.data.Dog
 
 class BerryPropSpec extends FlatSpec with Matchers {
 
@@ -22,7 +19,6 @@ class BerryPropSpec extends FlatSpec with Matchers {
     Dog.meta.fields.name.label should be("Pet's name")
     Dog.meta.fields.name.other should be("Other")
   }
-
 
 
 }

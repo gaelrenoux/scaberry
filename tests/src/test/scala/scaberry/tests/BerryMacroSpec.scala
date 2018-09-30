@@ -1,8 +1,7 @@
 package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scaberry.macros.berry
-import scaberry.tests.data.{Animal, Dog}
+import scaberry.tests.data._
 
 import scala.reflect.ClassTag
 
@@ -13,8 +12,6 @@ class BerryMacroSpec extends FlatSpec with Matchers {
   }
 
   it should "be created with a custom name if one is given" in {
-    @berry('meow)
-    case class Cat(color: String)
     "Cat.meow" should compile
     "Cat.meta" shouldNot typeCheck
   }
@@ -26,12 +23,8 @@ class BerryMacroSpec extends FlatSpec with Matchers {
   }
 
   it should "not return fields from another constructor" in {
-    @berry
-    case class Cat(color: String) {
-      def this(other: Cat) = this(other.color)
-    }
-    "Cat.meta.fields.color" should compile
-    "Cat.meta.fields.other" shouldNot typeCheck
+    "Sheep.meta.fields.color" should compile
+    "Sheep.meta.fields.other" shouldNot typeCheck
   }
 
   it should "not return other vals" in {

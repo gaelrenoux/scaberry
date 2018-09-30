@@ -1,8 +1,8 @@
 # Scaberry fields forever
 
-Secondary constructors does not stop the @berry annotation from
-working, but it makes it marked as a compilation error in IntelliJ (not
-confirmed with other IDEs).
+A few things are not recognized by IntelliJ and appear as compile error,
+although they do actually compile:
+- renaming the meta value on the companion object ;
+- access to the BerryProps declared on fields ;
+- secondary constructors on the class annotated with @berry.
 
-Direct access to the BerryProps declared on fields works, but is not
-recognized by IntelliJ.
