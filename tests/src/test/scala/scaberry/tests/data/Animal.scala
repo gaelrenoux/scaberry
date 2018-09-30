@@ -1,6 +1,5 @@
 package scaberry.tests.data
 
-
 trait Animal {
 
   val weight: Long

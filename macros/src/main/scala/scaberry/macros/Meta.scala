@@ -2,6 +2,7 @@ package scaberry.macros
 
 import scaberry.core.{CopyableField, Field}
 
+//TODO Move to core
 trait Meta[Source] {
 
   val orderedFields: Seq[Field[Source, _]]

@@ -1,15 +1,51 @@
 package scaberry.macros
 
+import scaberry.macros.helpers.{Unapply => U}
+
 import scala.collection.immutable.Seq
 import scala.meta._
 
-import scaberry.macros.helpers.{Unapply => U}
+object FieldsFactory {
 
-object SbFields {
+  /** @return all terms from the primary constructor */
+  def primaryConstructorTerms(clazz: Defn.Class): Seq[Term.Param] = {
+    clazz.ctor.paramss.flatten
+  }
 
-  def namesAndDeclarations(clazz: Defn.Class, isCopyable: Boolean): (Seq[Term.Name], Seq[Defn]) = {
+  /** @return all public val terms */
+  def publicValTerms(clazz: Defn.Class): Seq[Term.Param] = {
+    clazz.templ.children.flatMap {
+      case Defn.Val(mods, patterns, typeOption, content) if isPublic(mods) =>
+        val typ = typeOption.getOrElse(Type.Name("Any"))
+        expandTuples(patterns).map(p => (mods, p, typ))
+      case _ => Seq.empty
+    }.collect {
+      case (mods, patVar: Pat.Var, typ) =>
+        val varName = patVar.children.head.asInstanceOf[Term.Name]
+        Term.Param(mods, varName, Some(typ), None)
+    }
+  }
+
+  /** @return true if no mod in the Seq reduces the visibility from public */
+  private def isPublic(mods: Seq[Mod]) = {
+    !mods.exists {
+      case Mod.Private(_) => true
+      case Mod.Protected(_) => true
+      case _ => false
+    }
+  }
+
+  /** Flattens the Seq by expanding tuples */
+  private def expandTuples(s: Seq[Pat]): Seq[Pat.Var] = {
+    s.foldLeft(Seq[Pat.Var]()) {
+      case (acc, v: Pat.Var) => acc :+ v
+      case (acc, Pat.Tuple(list)) => acc ++ expandTuples(list)
+    }
+  }
+
+
+  def namesAndDeclarations(clazz: Defn.Class, isCopyable: Boolean, fieldTerms: Seq[Term.Param]): (Seq[Term.Name], Seq[Defn]) = {
     val srcTpe = clazz.name
-    val fieldTerms = clazz.ctor.paramss.flatten
 
     fieldTerms.map { fieldTerm =>
       val fieldName = Term.Name(fieldTerm.name.value)

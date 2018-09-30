@@ -48,23 +48,25 @@ class BerryMacroSpec extends FlatSpec with Matchers {
     "Dog.meta.fields.parameterized2" shouldNot typeCheck
   }
 
-  /*
-  "publicVal selector" should "return the public vals, vars, and nullary defs" in {
-    "Animal.publicFields.name" should compile
-    "Animal.publicFields.weight" should compile
-    "Animal.publicFields.color" should compile
-    "Animal.publicFields.otherName" should compile
-    "Animal.publicFields.whatever" should compile
-    "Dog.publicFields.name" should compile
+  "publicVal selector" should "return the public vals" in {
+    "Animal.meta.fields.name" should compile
+    "Animal.meta.fields.weight" should compile
+    "Animal.meta.fields.color" should compile
+    "Animal.meta.fields.otherName" should compile
+    "Animal.meta.fields.whatever" should compile
+    /*"Dog.publicFields.name" should compile
     "Dog.publicFields.weight" should compile
     "Dog.publicFields.color" should compile
     "Dog.publicFields.owner" should compile
     "Dog.publicFields.otherName" should compile
     "Dog.publicFields.otherOtherName" should compile
     "Dog.publicFields.whatever" should compile
-    "Dog.publicFields.whatever2" should compile
+    "Dog.publicFields.whatever2" should compile*/
+    "Bird.meta.fields.name" should compile
+    "Bird.meta.fields.color" should compile
   }
 
+  /*
   it should "not return the non-public vals" in {
     "Animal.publicFields.animate" shouldNot typeCheck
     "Dog.publicFields.animate" shouldNot typeCheck
@@ -78,8 +80,9 @@ class BerryMacroSpec extends FlatSpec with Matchers {
     "Dog.publicFields.parameterized" shouldNot typeCheck
     "Dog.publicFields.unary2" shouldNot typeCheck
     "Dog.publicFields.parameterized2" shouldNot typeCheck
-  }
+  } */
 
+  /*
   "from" should "not work on non-case classes" in {
     "FieldsMacro.from[Animal]" shouldNot compile
   }
@@ -210,6 +213,6 @@ class BerryMacroSpec extends FlatSpec with Matchers {
     name.name should be("label")
     label should be("Pet's name")
   }
-  
+
 }
 
