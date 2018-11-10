@@ -1,218 +1,124 @@
 package scaberry.tests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scaberry.macros.berryProp
-import scaberry.tests.data._
+import scaberry.tests.models._
 
 import scala.reflect.ClassTag
 
-class MetaGenerationSpec extends FlatSpec with Matchers {
+/** Tests on the @berry macro when applied on a case class. */
+class CaseClassBerryMacroSpec extends FlatSpec with Matchers {
+
+  val inouk: Dog = Dog("Inouk", Some("Gael"))
 
   "the meta object" should "be created with the default name if none is given" in {
     "Dog.meta" should compile
   }
 
   it should "be created with a custom name if one is given" in {
-    "Cat.meow" should compile
-    "Cat.meta" shouldNot typeCheck
+    "Fox.burrow" should compile
+    "Fox.meta" shouldNot typeCheck
   }
 
-  "default selector on case classes" should "return the fields in the primary constructor" in {
+  "the meta fields object" should "contain the arguments of the primary constructor" in {
     "Dog.meta.fields.name" should compile
-    "Dog.meta.fields.weight" should compile
-    "Dog.meta.fields.color" should compile
+    "Dog.meta.fields.owner" should compile
+    "Dog.meta.fields.good" should compile
+    "Dog.meta.fields.childrenCount" should compile
   }
 
-  it should "not return fields from another constructor" in {
+  it should "not contain the arguments of another constructor" in {
     "Sheep.meta.fields.color" should compile
     "Sheep.meta.fields.other" shouldNot typeCheck
   }
 
-  it should "not return other vals" in {
-    "Dog.meta.fields.animate" shouldNot typeCheck
-    "Dog.meta.fields.owner" shouldNot typeCheck
-    "Dog.meta.fields.genus" shouldNot typeCheck
+  it should "not contain other vals" in {
+    "Dog.meta.fields.fullName" shouldNot typeCheck
+    "Dog.meta.fields.owned" shouldNot typeCheck
   }
 
-  it should "not return other vars" in {
-    "Dog.meta.fields.whatever" shouldNot typeCheck
-    "Dog.meta.fields.whatever2" shouldNot typeCheck
+  it should "not contain the vars" in {
+    "Dog.meta.fields.weight" shouldNot typeCheck
   }
 
-  it should "not return the defs" in {
-    "Dog.meta.fields.otherName" shouldNot typeCheck
-    "Dog.meta.fields.otherOtherName" shouldNot typeCheck
-    "Dog.meta.fields.unary" shouldNot typeCheck
-    "Dog.meta.fields.parameterized" shouldNot typeCheck
-    "Dog.meta.fields.unary2" shouldNot typeCheck
-    "Dog.meta.fields.parameterized2" shouldNot typeCheck
+  it should "not contain the defs" in {
+    "Dog.meta.fields.compliment" shouldNot typeCheck
   }
 
-  "publicVal selector" should "return the public vals" in {
-    "Animal.meta.fields.name" should compile
-    "Animal.meta.fields.weight" should compile
-    "Animal.meta.fields.color" should compile
-    "Animal.meta.fields.otherName" should compile
-    "Animal.meta.fields.whatever" should compile
-    /*"Dog.publicFields.name" should compile
-    "Dog.publicFields.weight" should compile
-    "Dog.publicFields.color" should compile
-    "Dog.publicFields.owner" should compile
-    "Dog.publicFields.otherName" should compile
-    "Dog.publicFields.otherOtherName" should compile
-    "Dog.publicFields.whatever" should compile
-    "Dog.publicFields.whatever2" should compile*/
-    "Bird.meta.fields.name" should compile
-    "Bird.meta.fields.color" should compile
-  }
-
-  /*
-  it should "not return the non-public vals" in {
-    "Animal.publicFields.animate" shouldNot typeCheck
-    "Dog.publicFields.animate" shouldNot typeCheck
-    "Dog.publicFields.genus" shouldNot typeCheck
-  }
-
-  it should "not return the non-nullary defs" in {
-    "Animal.publicFields.unary" shouldNot typeCheck
-    "Animal.publicFields.parameterized" shouldNot typeCheck
-    "Dog.publicFields.unary" shouldNot typeCheck
-    "Dog.publicFields.parameterized" shouldNot typeCheck
-    "Dog.publicFields.unary2" shouldNot typeCheck
-    "Dog.publicFields.parameterized2" shouldNot typeCheck
-  } */
-
-  /*
-  "from" should "not work on non-case classes" in {
-    "FieldsMacro.from[Animal]" shouldNot compile
-  }
-
-  it should "not return other vals, vars and defs" in {
-    "Dog.fields.animate" shouldNot typeCheck
-    "Dog.fields.owner" shouldNot typeCheck
-    "Dog.fields.genus" shouldNot typeCheck
-    "Dog.fields.whatever" shouldNot typeCheck
-    "Dog.fields.whatever2" shouldNot typeCheck
-    "Dog.fields.unary" shouldNot typeCheck
-    "Dog.fields.parameterized" shouldNot typeCheck
-    "Dog.fields.unary2" shouldNot typeCheck
-    "Dog.fields.parameterized2" shouldNot typeCheck
-    "Dog.fields.otherName" shouldNot typeCheck
-    "Dog.fields.otherOtherName" shouldNot typeCheck
-  }
-
-  it should "not return fields from another constructor" in {
-    "Dog.fields.other" shouldNot typeCheck
-  }
-*/
-
-  "Definitions" should "have the correct class" in {
-    //"val x: Field[Animal, Option[String]] = Animal.publicFields.name" should compile
-    //"val x: Field[Animal, Long] = Animal.publicFields.weight" should compile
-    //"val x: CopyableField[Dog, Some[String]] = Dog.publicFields.name" should compile
-    //"val x: CopyableField[Dog, Long] = Dog.publicFields.weight" should compile
-    //"val x: Field[Dog, String] = Dog.publicFields.owner" should compile
-    "val x: scaberry.core.CopyableField[Dog, String] = Dog.meta.fields.color" should compile
-    "val x: scaberry.core.CopyableField[Dog, Some[String]] = Dog.meta.fields.name" should compile
-    "val x: scaberry.core.CopyableField[Dog, Long] = Dog.meta.fields.weight" should compile
+  "the meta fields" should "be copyable fields" in {
+    "val x: scaberry.core.CopyableField[Dog, String] = Dog.meta.fields.name" should compile
+    "val x: scaberry.core.CopyableField[Dog, Option[String]] = Dog.meta.fields.owner" should compile
+    "val x: scaberry.core.CopyableField[Dog, Boolean] = Dog.meta.fields.good" should compile
+    "val x: scaberry.core.CopyableField[Dog, Long] = Dog.meta.fields.childrenCount" should compile
   }
 
   they should "carry the correct name" in {
-    //force.arf(Animal.publicFields.name).name.name should be("name")
-    //force.arf(Animal.publicFields.weight).name.name should be("weight")
-    //force.arf(Animal.publicFields.otherName).name.name should be("otherName")
-    //force.arf(Dog.publicFields.name).name.name should be("name")
-    //force.arf(Dog.publicFields.weight).name.name should be("weight")
-    //force.arf(Dog.publicFields.owner).name.name should be("owner")
-    //force.arf(Dog.publicFields.otherName).name.name should be("otherName")
-    //force.arf(Dog.publicFields.otherOtherName).name.name should be("otherOtherName")
-    Dog.meta.fields.color.name.name should be("color")
-    Dog.meta.fields.name.name.name should be("name")
-    Dog.meta.fields.weight.name.name should be("weight")
+    Dog.meta.fields.name.name.toString should be("'name")
+    Dog.meta.fields.owner.name.toString should be("'owner")
+    Dog.meta.fields.good.name.toString should be("'good")
+    Dog.meta.fields.childrenCount.name.toString should be("'childrenCount")
   }
 
   they should "carry the correct class tags" in {
-    //force.arf(Animal.publicFields.name).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    //force.arf(Animal.publicFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    //force.arf(Animal.publicFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    //force.arf(Dog.publicFields.name).typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    //force.arf(Dog.publicFields.weight).typeClassTag should be(implicitly[ClassTag[Long]])
-    //force.arf(Dog.publicFields.owner).typeClassTag should be(implicitly[ClassTag[String]])
-    //force.arf(Dog.publicFields.otherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    //force.arf(Dog.publicFields.otherOtherName).typeClassTag should be(implicitly[ClassTag[Option[String]]])
-    Dog.meta.fields.color.typeClassTag should be(implicitly[ClassTag[String]])
-    Dog.meta.fields.name.typeClassTag should be(implicitly[ClassTag[Some[String]]])
-    Dog.meta.fields.weight.typeClassTag should be(implicitly[ClassTag[Long]])
+    Dog.meta.fields.name.typeClassTag should be(implicitly[ClassTag[String]])
+    Dog.meta.fields.owner.typeClassTag should be(implicitly[ClassTag[Option[String]]])
+    Dog.meta.fields.good.typeClassTag should be(implicitly[ClassTag[Boolean]])
+    Dog.meta.fields.childrenCount.typeClassTag should be(implicitly[ClassTag[Long]])
   }
 
-
-  val casimir: Animal = new Animal {
-    override val weight: Long = 42L
-    override val color: String = "orange"
-    override val name: Option[String] = Some("Casimir")
-  }
-  val rex: Dog = Dog("brown", 9L, Some("Rex"))
-
-  "Getters" should "return the correct value" in {
-    //Animal.publicFields.name(casimir).get should be(Some("Casimir"))
-    //Animal.publicFields.weight(casimir).get should be(42L)
-    //Animal.publicFields.otherName(casimir).get should be(Some("Casimir"))
-    //Animal.publicFields.name(rex).get should be(Some("Rex"))
-    //Animal.publicFields.weight(rex).get should be(9L)
-    //Animal.publicFields.otherName(rex).get should be(Some("Rex"))
-    //Dog.publicFields.name(rex).get should be(Some("Rex"))
-    //Dog.publicFields.weight(rex).get should be(9L)
-    //Dog.publicFields.owner(rex).get should be("Unknown")
-    //Dog.publicFields.otherName(rex).get should be(Some("Rex"))
-    //Dog.publicFields.otherOtherName(rex).get should be(Some("Rex"))
-    Dog.meta.fields.color(rex).get should be("brown")
-    Dog.meta.fields.name(rex).get should be(Some("Rex"))
-    Dog.meta.fields.weight(rex).get should be(9L)
+  "the meta fields getters" should "return the correct value" in {
+    Dog.meta.fields.name(inouk).get should be("Inouk")
+    Dog.meta.fields.owner(inouk).get should be(Some("Gael"))
+    Dog.meta.fields.good(inouk).get should be(true)
+    Dog.meta.fields.childrenCount(inouk).get should be(0L)
   }
 
-  "Copiers" should "return the correct value" in {
-    //force.dcf[Some[String]](Dog.publicFields.name)(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
-    //force.dcf[Long](Dog.publicFields.weight)(rex).copy(12L) should be(rex.copy(weight = 12L))
-    Dog.meta.fields.color(rex).copy("black") should be(rex.copy(color = "black"))
-    Dog.meta.fields.name(rex).copy(Some("Medor")) should be(rex.copy(name = Some("Medor")))
-    Dog.meta.fields.weight(rex).copy(12L) should be(rex.copy(weight = 12L))
+  "the meta fields copiers" should "return the correct value" in {
+    Dog.meta.fields.name(inouk).copy("Rex") should be(inouk.copy(name = "Rex"))
+    Dog.meta.fields.owner(inouk).copy(None) should be(inouk.copy(owner = None))
+    Dog.meta.fields.good(inouk).copy(false) should be(inouk.copy(good = false))
+    Dog.meta.fields.childrenCount(inouk).copy(12L) should be(inouk.copy(childrenCount = 12L))
   }
 
   they should "expect the correct type" in {
-    //"Dog.publicFields.name(rex).copy(None)" shouldNot typeCheck
-    //"Dog.publicFields.weight(rex).copy(\"42\")" shouldNot typeCheck
-    "Dog.meta.fields.color(rex).copy(42)" shouldNot typeCheck
-    "Dog.meta.fields.name(rex).copy(\"Medor\")" shouldNot typeCheck
-    "Dog.meta.fields.weight(rex).copy(\"12\")" shouldNot typeCheck
+    "Dog.meta.fields.name(inouk).copy(42)" shouldNot typeCheck
+    "Dog.meta.fields.owner(inouk).copy(\"Me\")" shouldNot typeCheck
+    "Dog.meta.fields.good(inouk).copy(0)" shouldNot typeCheck
+    "Dog.meta.fields.childrenCount(inouk).copy(true)" shouldNot typeCheck
   }
 
-  they should "not compile when not available" in {
-    //"Animal.publicFields.name(casimir).copy(None)" shouldNot typeCheck
-    //"Animal.publicFields.weight(casimir).copy(42L)" shouldNot typeCheck
+  "the meta fields annotations" should "be non-empty if declared" in {
+    Wolf.meta.fields.color.annotations.get[priority].map(_.level) should be(Some(10))
+    Wolf.meta.fields.name.annotations.get[label].map(_.value) should be(Some("True name"))
   }
 
-  "Annotations" should "be there if declared" in {
-    Dog.meta.fields.color.annotations.get[priority].map(_.level) should be(Some(10))
-    Dog.meta.fields.name.annotations.get[label].map(_.value) should be(Some("Pet's name"))
+  they should "be empty if not declared" in {
+    Wolf.meta.fields.color.annotations.get[label] should be(None)
+    Wolf.meta.fields.name.annotations.get[priority] should be(None)
   }
 
-  they should "be missing if not declared" in {
-    Dog.meta.fields.color.annotations.get[label] should be(None)
+  they should "display all occurrences if the same annotation is declared multiple times" in {
+    Wolf.meta.fields.childrenCount.annotations.getList[label].map(_.value) should be(Seq("Children", "Cubs"))
   }
 
-  they should "prioritize the first one if the same one is declared multiple times" in {
-    Dog.meta.fields.name.annotations.get[berryProp] should be(Some(berryProp('label, "Pet's name")))
+  they should "prioritize the first occurrence if the same annotation is declared multiple times" in {
+    Wolf.meta.fields.childrenCount.annotations.get[label].map(_.value) should be(Some("Children"))
   }
 
-  they should "display all occurrences if the same one is declared multiple times" in {
-    Dog.meta.fields.name.annotations.getList[berryProp] should be(Seq(berryProp('label, "Pet's name"), berryProp('other, "Other")))
+  "the berry annotations" should "be integrated into the field" in {
+    "Wolf.meta.fields.name.label" should compile
+    "Wolf.meta.fields.name.other" should compile
+
+    "Wolf.meta.fields.name.what" shouldNot typeCheck
+    "Wolf.meta.fields.color.label" shouldNot typeCheck
   }
 
-  they should "be deconstructible" in {
-    val Some(berryProp(name, label)) = Dog.meta.fields.name.annotations.get[berryProp]
-    name.name should be("label")
-    label should be("Pet's name")
+  they should "contain the correct value" in {
+    Wolf.meta.fields.name.label should be("True name")
+    Wolf.meta.fields.name.other should be("Other")
   }
+
+  //TODO what if the same one is present multiple time ?
+
 
 }
 

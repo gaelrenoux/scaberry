@@ -1,4 +1,4 @@
-package scaberry.tests.data
+package scaberry.tests.models
 
 import scaberry.macros.berry
 
