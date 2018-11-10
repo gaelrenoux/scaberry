@@ -5,6 +5,7 @@ import scaberry.macros.helpers.{Unapply => U}
 import scala.collection.immutable.Seq
 import scala.meta._
 
+
 object FieldsFactory {
 
   /** @return all terms from the primary constructor */
@@ -43,7 +44,7 @@ object FieldsFactory {
     }
   }
 
-
+  /** @return All field names, and the associated Field objects */
   def namesAndDeclarations(clazz: Defn.Class, isCopyable: Boolean, fieldTerms: Seq[Term.Param]): (Seq[Term.Name], Seq[Defn]) = {
     val srcTpe = clazz.name
 
