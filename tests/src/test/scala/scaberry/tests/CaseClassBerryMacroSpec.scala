@@ -6,7 +6,7 @@ import scaberry.tests.data._
 
 import scala.reflect.ClassTag
 
-class BerryMacroSpec extends FlatSpec with Matchers {
+class MetaGenerationSpec extends FlatSpec with Matchers {
 
   "the meta object" should "be created with the default name if none is given" in {
     "Dog.meta" should compile
