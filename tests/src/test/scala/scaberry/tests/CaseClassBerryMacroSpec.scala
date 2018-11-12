@@ -27,8 +27,8 @@ class CaseClassBerryMacroSpec extends FlatSpec with Matchers {
   }
 
   it should "not contain the arguments of another constructor" in {
-    "Sheep.meta.fields.color" should compile
-    "Sheep.meta.fields.other" shouldNot typeCheck
+    "Wolf.meta.fields.color" should compile
+    "Wolf.meta.fields.other" shouldNot typeCheck
   }
 
   it should "not contain other vals" in {
@@ -86,38 +86,33 @@ class CaseClassBerryMacroSpec extends FlatSpec with Matchers {
     "Dog.meta.fields.childrenCount(inouk).copy(true)" shouldNot typeCheck
   }
 
-  "the meta fields annotations" should "be non-empty if declared" in {
-    Wolf.meta.fields.color.annotations.get[priority].map(_.level) should be(Some(10))
-    Wolf.meta.fields.name.annotations.get[label].map(_.value) should be(Some("True name"))
+  "the meta fields annotations" should "be found when declared" in {
+    Dog.meta.fields.name.annotations.get[label].map(_.value) should be(Some("Nom"))
+    Dog.meta.fields.name.annotations.get[priority] should be(None)
+    Dog.meta.fields.good.annotations.get[label] should be(None)
   }
 
-  they should "be empty if not declared" in {
-    Wolf.meta.fields.color.annotations.get[label] should be(None)
-    Wolf.meta.fields.name.annotations.get[priority] should be(None)
+  they should "have all occurrences displayed by getList" in {
+    Dog.meta.fields.good.annotations.getList[priority].map(_.level) should be(Seq(10, 12))
   }
 
-  they should "display all occurrences if the same annotation is declared multiple times" in {
-    Wolf.meta.fields.childrenCount.annotations.getList[label].map(_.value) should be(Seq("Children", "Cubs"))
+  they should "have the first occurrence displayed by get" in {
+    Dog.meta.fields.good.annotations.get[priority].map(_.level) should be(Some(10))
   }
 
-  they should "prioritize the first occurrence if the same annotation is declared multiple times" in {
-    Wolf.meta.fields.childrenCount.annotations.get[label].map(_.value) should be(Some("Children"))
-  }
-
-  "the berry annotations" should "be integrated into the field" in {
-    "Wolf.meta.fields.name.label" should compile
-    "Wolf.meta.fields.name.other" should compile
-
-    "Wolf.meta.fields.name.what" shouldNot typeCheck
-    "Wolf.meta.fields.color.label" shouldNot typeCheck
+  "the berryProp annotations" should "be integrated into the field" in {
+    "Dog.meta.fields.owner.label" should compile
+    "Dog.meta.fields.name.label" shouldNot typeCheck
   }
 
   they should "contain the correct value" in {
-    Wolf.meta.fields.name.label should be("True name")
-    Wolf.meta.fields.name.other should be("Other")
+    Dog.meta.fields.owner.label should be("Master")
   }
 
-  //TODO what if the same one is present multiple time ?
+  they should "prioritize the first value" in {
+    Dog.meta.fields.childrenCount.masked should be("yes")
+  }
+
 
 
 }

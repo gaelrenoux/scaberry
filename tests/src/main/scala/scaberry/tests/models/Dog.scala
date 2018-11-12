@@ -1,9 +1,14 @@
 package scaberry.tests.models
 
-import scaberry.macros.berry
+import scaberry.macros.{berry, berryProp}
 
 @berry
-case class Dog(name: String, owner: Option[String], good: Boolean = true, childrenCount: Long = 0) {
+case class Dog(
+                @label("Nom") name: String,
+                @label("Maître") @berryProp('label, "Master") owner: Option[String],
+                @priority(10) @priority(12) good: Boolean = true,
+                @berryProp('masked, "yes") @berryProp('label, "no") childrenCount: Long = 0
+              ) {
 
   val fullName: String = s"${owner.getOrElse("No one")}'s $name"
 

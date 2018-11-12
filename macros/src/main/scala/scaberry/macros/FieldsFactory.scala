@@ -54,8 +54,11 @@ object FieldsFactory {
       val fieldNameSym = Lit.Symbol(scala.Symbol(fieldName.value))
 
       val fieldProps = fieldTerm.mods.collect {
-        case BerryProp(name, value) => q"""val ${Pat.Var.Term(Term.Name(name.name))} = ${Lit.String(value)}"""
-      }
+        case BerryProp(name, value) =>
+          name -> q"""val ${Pat.Var.Term(Term.Name(name.name))} = ${Lit.String(value)}"""
+      }.groupBy(_._1).map {
+        case (_, seq) => seq.head._2
+      }.toList
 
       val annotations = fieldTerm.mods.collect {
         case U.Annotation(name, args) => q"new ${Ctor.Name(name)}(..$args)"
