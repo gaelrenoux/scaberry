@@ -1,8 +1,8 @@
-package scaberry.tests
+package scaberry.macrostests
 
 import org.scalatest.{FlatSpec, Matchers}
 import scaberry.core.Filter
-import scaberry.tests.models._
+import scaberry.macrostests.models._
 
 class FilterSpec extends FlatSpec with Matchers {
 

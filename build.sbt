@@ -60,8 +60,8 @@ lazy val macros = project // (project in file("macros"))
   .dependsOn(core)
   .settings(commonSettings, macroDefSettings)
 
-lazy val tests = project //(project in file("tests"))
+lazy val macrosTests = (project in file("macros-tests"))
   .dependsOn(core, macros)
   .settings(commonSettings, macroParadiseSettings)
 
-lazy val all = (project in file(".")).aggregate(core, macros, tests)
+lazy val all = (project in file(".")).aggregate(core, macros, macrosTests)

@@ -1,7 +1,8 @@
-package scaberry.tests
+package scaberry.macrostests
 
 import org.scalatest.{FlatSpec, Matchers}
-import scaberry.tests.models._
+import scaberry.macrostests.models.{label, priority}
+import scaberry.macrostests.models._
 
 import scala.reflect.ClassTag
 

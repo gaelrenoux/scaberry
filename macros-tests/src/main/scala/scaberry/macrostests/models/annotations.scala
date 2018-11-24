@@ -1,5 +1,4 @@
-package scaberry.tests.models
-
+package scaberry.macrostests.models
 
 import scaberry.macros.BerryProperty
 

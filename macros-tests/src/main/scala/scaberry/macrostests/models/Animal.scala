@@ -1,4 +1,4 @@
-package scaberry.tests.models
+package scaberry.macrostests.models
 
 trait Animal {
 
