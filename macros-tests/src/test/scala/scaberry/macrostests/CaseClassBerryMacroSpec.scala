@@ -45,6 +45,12 @@ class CaseClassBerryMacroSpec extends FlatSpec with Matchers {
     "Dog.meta.fields.compliment" shouldNot typeCheck
   }
 
+  it should "be generated correctly for big case classes" in {
+    "Alphabet.meta.fields.alpha" should compile
+    "Alphabet.meta.fields.nu" should compile
+    "Alphabet.meta.fields.omega" should compile
+  }
+
   "the meta fields" should "be copyable fields" in {
     "val x: scaberry.core.CopyableField[Dog, String] = Dog.meta.fields.name" should compile
     "val x: scaberry.core.CopyableField[Dog, Option[String]] = Dog.meta.fields.owner" should compile
@@ -113,8 +119,6 @@ class CaseClassBerryMacroSpec extends FlatSpec with Matchers {
   they should "prioritize the first value" in {
     Dog.meta.fields.childrenCount.masked should be("yes")
   }
-
-
 
 }
 
