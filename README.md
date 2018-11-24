@@ -42,7 +42,7 @@ val filterMultiple = filterName |@| Dog.meta.fields.owner.filterWith(_.isEmpty)
 filterMultiple(inouk)
 //res3: Boolean = false
 
-val updateName = dogName.updateSet("Rex")
+val updateName = dogName.updateVal("Rex")
 // updateName: scaberry.core.Update.Field[scaberry.tests.models.Dog,String] = <function1>
 
 updateName(inouk)

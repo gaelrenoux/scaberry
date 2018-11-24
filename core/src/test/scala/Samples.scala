@@ -14,7 +14,7 @@ object Samples {
 
   val aFilter: Filter[Person] = PersonFields.name.filterEq("Roger") |@| PersonFields.age.filterWith(_ > 18)
 
-  val anUpdate: Update[Person] = PersonFields.name.updateSet("Roger") |@| PersonFields.age.updateWith(_ * 2)
+  val anUpdate: Update[Person] = PersonFields.name.updateVal("Roger") |@| PersonFields.age.updateWith(_ * 2)
 
   case class PersonFilter(
                            name: Filter[String] = Filter.None,

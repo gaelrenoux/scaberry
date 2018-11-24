@@ -49,7 +49,7 @@ class CopyableField[Source, Type](name: Symbol,
     new Update.Field[Source, Type](name, getter, copier, u)
 
   /** Commodity method */
-  def updateSet(v: Type): Update.Field[Source, Type] =
+  def updateVal(v: Type): Update.Field[Source, Type] =
     update(Update.value(v))
 
   /** Commodity method */
