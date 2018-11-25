@@ -17,16 +17,13 @@ class Field[-Source, Type](val name: Symbol,
     new Field.Application[Type](getter(target))
 
   /** Returns a new filter on the source object which applies argument filter to this field. */
-  def filter(f: Filter[Type]): Filter.FieldF[Source, Type] =
-    new Filter.FieldF[Source, Type](name, getter, f)
+  def filter(f: Filter[Type]): Filter.FieldF[Source, Type] = Filter.field(this, f)
 
   /** Commodity method */
-  def filterEq(v: Type): Filter.FieldF[Source, Type] =
-    filter(Filter.value(v))
+  def filterEq(v: Type): Filter.TreeFieldF[Source, Type] = Filter.field(this, Filter.value(v))
 
   /** Commodity method */
-  def filterWith(f: Type => Boolean): Filter.FieldF[Source, Type] =
-    filter(Filter.operation(f))
+  def filterWith(f: Type => Boolean): Filter.FieldF[Source, Type] = Filter.field(this, Filter.operation(f))
 
   /** The same field but on a more specific class, or with a wider type. */
   def lifted[S <: Source, T >: Type : ClassTag]: Field[S, T] = new Field[S, T](name, getter)
@@ -48,10 +45,10 @@ class CopyableField[Source, Type](name: Symbol,
   def update(u: Update[Type]): Update.FieldU[Source, Type] = Update.field(this, u)
 
   /** Commodity method */
-  def updateVal(v: Type): Update.FieldU[Source, Type] = update(Update.value(v))
+  def updateVal(v: Type): Update.TreeFieldU[Source, Type] = Update.field(this, Update.value(v))
 
   /** Commodity method */
-  def updateWith(f: Type => Type): Update.FieldU[Source, Type] = update(Update.operation(f))
+  def updateWith(f: Type => Type): Update.FieldU[Source, Type] = Update.field(this, Update.operation(f))
 
 }
 

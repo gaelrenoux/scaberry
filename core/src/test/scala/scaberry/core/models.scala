@@ -1,7 +1,7 @@
 package scaberry.core
 
 
-case class Person(name: String, age: Long)
+case class Person(name: String, age: Long, bearded: Boolean = false)
 
 object Person {
 
@@ -13,9 +13,14 @@ object Person {
     (p, a) => p.copy(age = a)
   }
 
+  val beardedCopier: (Person, Boolean) => Person = {
+    (p, b) => p.copy(bearded = b)
+  }
+
   object Fields {
     val name = new CopyableField[Person, String]('name, _.name, nameCopier)
     val age = new CopyableField[Person, Long]('age, _.age, ageCopier)
+    val bearded = new CopyableField[Person, Boolean]('bearded, _.bearded, beardedCopier)
   }
 
   case class CustomFilter(
