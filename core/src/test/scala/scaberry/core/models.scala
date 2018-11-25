@@ -21,7 +21,7 @@ object Person {
   case class CustomFilter(
                            name: Filter[String] = Filter.None,
                            age: Filter[Long] = Filter.None
-                         ) extends Filter.Custom[Person] {
+                         ) extends Filter.CustomF[Person] {
     override def verify(p: Person): Boolean = name(p.name) && age(p.age)
   }
 

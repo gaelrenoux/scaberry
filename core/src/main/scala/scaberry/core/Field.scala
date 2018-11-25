@@ -7,7 +7,7 @@ import scala.reflect.ClassTag
 
 /** A field on a type. */
 class Field[-Source, Type](val name: Symbol,
-                           private val getter: Source => Type,
+                           val getter: Source => Type,
                            val annotations: TagMap = TagMap.Empty
                           )(implicit
                             val typeClassTag: ClassTag[Type]
@@ -17,15 +17,15 @@ class Field[-Source, Type](val name: Symbol,
     new Field.Application[Type](getter(target))
 
   /** Returns a new filter on the source object which applies argument filter to this field. */
-  def filter(f: Filter[Type]): Filter.Field[Source, Type] =
-    new Filter.Field[Source, Type](name, getter, f)
+  def filter(f: Filter[Type]): Filter.FieldF[Source, Type] =
+    new Filter.FieldF[Source, Type](name, getter, f)
 
   /** Commodity method */
-  def filterEq(v: Type): Filter.Field[Source, Type] =
+  def filterEq(v: Type): Filter.FieldF[Source, Type] =
     filter(Filter.value(v))
 
   /** Commodity method */
-  def filterWith(f: Type => Boolean): Filter.Field[Source, Type] =
+  def filterWith(f: Type => Boolean): Filter.FieldF[Source, Type] =
     filter(Filter.operation(f))
 
   /** The same field but on a more specific class, or with a wider type. */
@@ -35,7 +35,7 @@ class Field[-Source, Type](val name: Symbol,
 
 class CopyableField[Source, Type](name: Symbol,
                                   getter: Source => Type,
-                                  private[core] val copier: Copier[Source, Type],
+                                  val copier: Copier[Source, Type],
                                   annotations: TagMap = TagMap.Empty
                                  )(implicit
                                    typeClassTag: ClassTag[Type]
@@ -45,16 +45,13 @@ class CopyableField[Source, Type](name: Symbol,
     new Field.CopyableApplication(getter(target), copier(target, _))
 
   /** Returns a new update on the source object which applies argument update to this field. */
-  def update(u: Update[Type]) =
-    new Update.Field[Source, Type](name, getter, copier, u)
+  def update(u: Update[Type]): Update.FieldU[Source, Type] = Update.field(this, u)
 
   /** Commodity method */
-  def updateVal(v: Type): Update.Field[Source, Type] =
-    update(Update.value(v))
+  def updateVal(v: Type): Update.FieldU[Source, Type] = update(Update.value(v))
 
   /** Commodity method */
-  def updateWith(f: Type => Type): Update.Field[Source, Type] =
-    update(Update.operation(f))
+  def updateWith(f: Type => Type): Update.FieldU[Source, Type] = update(Update.operation(f))
 
 }
 

@@ -17,7 +17,7 @@ object MetaFactory {
 
     if (isCopyable)
       q"""
-          object $metaObjectName extends scaberry.macros.CaseMeta[$srcTpe] {
+          object $metaObjectName extends scaberry.core.CaseMeta[$srcTpe] {
             object fields {
               ..$sbDeclarations
             }
@@ -31,7 +31,7 @@ object MetaFactory {
         """
     else
       q"""
-          object $metaObjectName extends scaberry.macros.Meta[$srcTpe] {
+          object $metaObjectName extends scaberry.core.Meta[$srcTpe] {
             object fields {
               ..$sbDeclarations
             }
