@@ -1,6 +1,5 @@
 package scaberry.core
 
-import scaberry.core.Field.Getter
 import scaberry.core.Filter._
 
 /** A filter on a target object. */

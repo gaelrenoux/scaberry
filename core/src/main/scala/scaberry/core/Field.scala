@@ -1,7 +1,5 @@
 package scaberry.core
 
-import scaberry.core.Field.Copier
-
 import scala.reflect.ClassTag
 
 
@@ -54,8 +52,6 @@ class CopyableField[Source, Type](name: Symbol,
 
 
 object Field {
-  type Getter[-Source, +Type] = Source => Type
-  type Copier[Source, -Type] = Function2[Source, Type, Source]
 
   /** Application of the field to a specific instance. */
   class Application[Type](wrapped: => Type) {
