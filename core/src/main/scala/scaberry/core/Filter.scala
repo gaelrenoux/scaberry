@@ -16,6 +16,8 @@ sealed trait Filter[-Target] extends Function1[Target, Boolean] {
   /** Combines two filter into one. Target must match both combined filters. */
   def `|@|`[T2 <: Target](other: Filter[T2]): Filter[T2] = and(other)
 
+  override def compose[B](f: B => Target): Filter[B] = operation(b => this (f(b)))
+
 }
 
 
@@ -32,6 +34,8 @@ object Filter {
   object None extends Filter[Any] with TreeF[Any] {
     override def verify(t: Any): Boolean = true
   }
+
+  val none: Filter[Any] = None
 
   /** Value filter, accepts only value equals to its argument. */
   final class ValueF[-T] private[core](value: T) extends Filter[T] with TreeF[T] {
@@ -76,13 +80,13 @@ object Filter {
   def field[T, F](field: Field[T, F], filter: TreeF[F]): TreeFieldF[T, F] = new TreeFieldF(field.name, field.getter, filter)
 
 
-  /** Composed filter, obtained by combining filters. */
+  /** Composed filter, obtained by combining arbitrary filters. */
   final class ComposedF[-T] private[core](list: List[Filter[T]]) extends Filter[T] {
-    override def verify(target: T): Boolean = list.forall(_.verify(target))
+    override def verify(target: T): Boolean = subfilters.forall(_.verify(target))
 
     lazy val subfilters: List[Filter[T]] = list.reverse
 
-    /* Specific definition of {{and}} for Composed filter, to avoid too deep a hierarchy. */
+    /** Specific definition of {{and}} for Composed filter, to avoid too deep a hierarchy. */
     override def and[T2 <: T](other: Filter[T2]): Filter[T2] = new ComposedF[T2](other :: list)
   }
 

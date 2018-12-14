@@ -16,6 +16,8 @@ trait Update[Target] extends Function1[Target, Target] {
   /** Combines two updates into one, which will be applied in order. */
   def `|@|`(other: Update[Target]): Update[Target] = and(other)
 
+  def compose[B](f: B => Target, g: Target => B): OperationU[B] = operation(b => g(this(f(b))))
+
 }
 
 
