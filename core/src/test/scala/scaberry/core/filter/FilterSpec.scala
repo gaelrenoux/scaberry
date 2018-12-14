@@ -8,6 +8,12 @@ class FilterSpec extends FlatSpec with Matchers {
   val darwin: Person = Person("Charles Darwin", 50, bearded = true)
   val newton: Person = Person("Isaac Newton", 44)
 
+
+  import CanCombineAnd._
+
+  val f: Filter.Value[Long] = Filter.empty[Long].and(Filter.value(48L))
+  val g: Filter.Value[Long] = Filter.value(48L).and(Filter.empty[Long])
+
   "None" should "validate any value" in {
     Filter.Empty.verify(42) should be(true)
     Filter.Empty.verify(false) should be(true)
@@ -32,18 +38,6 @@ class FilterSpec extends FlatSpec with Matchers {
     val f = Filter.field(Person.Fields.name, Filter.value("Charles Darwin"))
     f.verify(darwin) should be(true)
     f.verify(newton) should be(false)
-  }
-
-  it should "infer the correct serializability" in {
-    def fs: Filter[String, Ser.Simple] = ???
-    def fc: Filter[String, Ser.Complex] = ???
-    def fn: Filter[String, Ser.None] = ???
-
-    "val f: Filter[Person, Serializability.Simple] = Filter.field(Person.Fields.name, fs)" should compile
-    "val f: Filter[Person, Serializability.Complex] = Filter.field(Person.Fields.name, fc)" should compile
-    "val f: Filter[Person, Serializability.Simple] = Filter.field(Person.Fields.name, fc)" shouldNot typeCheck
-    "val f: Filter[Person, Serializability.None] = Filter.field(Person.Fields.name, fn)" should compile
-    "val f: Filter[Person, Serializability.Complex] = Filter.field(Person.Fields.name, fn)" shouldNot typeCheck
   }
 
   "Fields" should "work on two fields" in {
