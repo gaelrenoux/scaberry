@@ -13,6 +13,9 @@ class FilterSpec extends FlatSpec with Matchers {
 
   val f: Filter.Value[Long] = Filter.empty[Long].and(Filter.value(48L))
   val g: Filter.Value[Long] = Filter.value(48L).and(Filter.empty[Long])
+  val nameFilter: Filter.Field[Person, String] = Filter.field(Person.Fields.name, Filter.value("Charles Darwin"))
+  val ageFilter: Filter.Field[Person, Long] = Filter.field(Person.Fields.age, Filter.value(42L))
+  val personFilter: Filter.Fields[Person]  = ageFilter.and(nameFilter)(fieldAndfield)
 
   "None" should "validate any value" in {
     Filter.Empty.verify(42) should be(true)

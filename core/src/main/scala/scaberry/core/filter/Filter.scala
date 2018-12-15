@@ -57,34 +57,45 @@ object Filter {
     override def verify(a: A): Boolean = filter(getter(a))
   }
 
+  /** Commodity projection */
+  type AnyField[A] = Field[A, _]
+
   /** Commodity function to define a Field */
   def field[A, B](field: CField[A, B], filter: Filter[B]): Field[A, B] = new Field(field.name, field.getter, filter)
 
   /** Filter on multiple fields. */
-  final class Fields[-A] private[core](seq: Seq[Field[A, _]]) extends Filter[A] {
+  final class Fields[-A] private[core](private val seq: Seq[Field[A, _]]) extends Filter[A] {
     override def verify(a: A): Boolean = seq.forall(_.verify(a))
+
+    private[filter] def add[B <: A](f: Field[B, _]) = new Fields[B](seq :+ f)
+
+    private[filter] def addAll[B <: A](fs: Fields[B]) = new Fields[B](seq ++ fs.seq)
   }
 
   /** Commodity function to define a Fields */
   def fields[A](fields: Field[A, _]*): Fields[A] = new Fields(fields)
 
   /** Filters put together, all must match. */
-  final class CompositeAnd[-A] private[core](seq: Seq[Filter[A]]) extends Filter[A] {
+  final class CompositeAnd[-A] private[core](private val seq: Seq[Filter[A]]) extends Filter[A] {
 
     override def verify(a: A): Boolean = seq.forall(_.verify(a))
 
-    /*
-        override def &&[B <: A, SB <: Ser](that: Filter[B, SB]): Filter[B, Ser] =
-          Filter.compositeAnd[B, Ser, Ser](this.seq :+ that: _*)*/
+    private[filter] def add[B <: A](f: Filter[B]) = new CompositeAnd[B](seq :+ f)
+
+    private[filter] def addAll[B <: A](fs: CompositeAnd[B]) = new CompositeAnd[B](seq ++ fs.seq)
   }
 
   /** Commodity function to define a CompositeAnd */
   def compositeAnd[A](filters: Filter[A]*): CompositeAnd[A] = new CompositeAnd(filters)
 
   /** Filters put together, any must match. */
-  final class CompositeOr[-A] private[core](seq: Seq[Filter[A]]) extends Filter[A] {
+  final class CompositeOr[-A] private[core](private val seq: Seq[Filter[A]]) extends Filter[A] {
 
     override def verify(a: A): Boolean = seq.exists(_.verify(a))
+
+    private[filter] def add[B <: A](f: Filter[B]) = new CompositeOr[B](seq :+ f)
+
+    private[filter] def addAll[B <: A](fs: CompositeOr[B]) = new CompositeOr[B](seq ++ fs.seq)
   }
 
   /** Commodity function to define a CompositeOr */
