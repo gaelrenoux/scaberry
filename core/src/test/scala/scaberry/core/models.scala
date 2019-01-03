@@ -37,3 +37,9 @@ object Person {
                          )
 
 }
+
+case class House(
+    name: String,
+    neighbour: House,
+    occupants: Seq[Person]
+)

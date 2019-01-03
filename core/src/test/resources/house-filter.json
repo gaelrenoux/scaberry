@@ -1,0 +1,19 @@
+{
+  //this is a Fields filter
+  "type": "fields",
+  "fields": {
+    "name": {
+      //this is a value filter
+      "value": "Home Sweet Home"
+    },
+    "neighbour": {
+      //this is an empty filter
+    },
+    "occupants": {
+      //this is a collection-all filter
+      "for_all": {
+        //this is an empty filter
+      }
+    }
+  }
+}

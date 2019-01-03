@@ -44,36 +44,58 @@ object Filter {
   /** Commodity function to define a Value */
   def value[A](value: A): Value[A] = new Value(value)
 
+  /** Filter on a collection by checking if the filter matches any element */
+  final class CollectionAny[-A] private[core](filter: Filter[A]) extends Filter[Traversable[A]] {
+    override def verify(a: Traversable[A]): Boolean = a.exists(filter)
+  }
+
+  /** Commodity function to define a CollectionAny */
+  def collectionAny[A](filter: Filter[A]): Value[A] = new Value(value)
+
+  /** Filter on a collection by checking if the filter matches all elements */
+  final class CollectionAll[-A] private[core](filter: Filter[A]) extends Filter[Traversable[A]] {
+    override def verify(a: Traversable[A]): Boolean = a.forall(filter)
+  }
+
+  /** Commodity function to define a CollectionAll */
+  def collectionAll[A](filter: Filter[A]): Value[A] = new Value(value)
+
   /** Filter on an object by filtering on one of that object's fields.
     *
     * @tparam A Target type to filter
+    */
+  sealed trait Field[-A] extends Filter[A] {
+    val name: Symbol
+    val filter: Filter[_]
+  }
+
+  /**
+    * Inner class to ensure the type of the wrapped filter matches the type of the getter.
+    * @tparam A Target type to filter
     * @tparam B Type of the filtered field
     */
-  final class Field[-A, -B] private[core](
+  private final class OvertypedField[-A, -B] private[core](
       val name: Symbol,
       getter: Getter[A, B],
       val filter: Filter[B]
-  ) extends Filter[A] {
+  ) extends Field[A] {
     override def verify(a: A): Boolean = filter(getter(a))
   }
 
-  /** Commodity projection */
-  type AnyField[A] = Field[A, _]
-
   /** Commodity function to define a Field */
-  def field[A, B](field: CField[A, B], filter: Filter[B]): Field[A, B] = new Field(field.name, field.getter, filter)
+  def field[A, B](field: CField[A, B], filter: Filter[B]): Field[A] = new OvertypedField(field.name, field.getter, filter)
 
   /** Filter on multiple fields. */
-  final class Fields[-A] private[core](private val seq: Seq[Field[A, _]]) extends Filter[A] {
+  final class Fields[-A] private[core](private val seq: Seq[Field[A]]) extends Filter[A] {
     override def verify(a: A): Boolean = seq.forall(_.verify(a))
 
-    private[filter] def add[B <: A](f: Field[B, _]) = new Fields[B](seq :+ f)
+    private[filter] def add[B <: A](f: Field[B]) = new Fields[B](seq :+ f)
 
     private[filter] def addAll[B <: A](fs: Fields[B]) = new Fields[B](seq ++ fs.seq)
   }
 
   /** Commodity function to define a Fields */
-  def fields[A](fields: Field[A, _]*): Fields[A] = new Fields(fields)
+  def fields[A](fields: Field[A]*): Fields[A] = new Fields(fields)
 
   /** Filters put together, all must match. */
   final class CompositeAnd[-A] private[core](private val seq: Seq[Filter[A]]) extends Filter[A] {

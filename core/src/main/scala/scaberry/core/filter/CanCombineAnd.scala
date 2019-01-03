@@ -24,17 +24,17 @@ object CanCombineAnd {
   implicit def anyAndEmpty[F[_] <: Filter[_]]: CanCombineAnd[F, Empty, F] =
     reversed(emptyAndAny)
 
-  implicit val fieldAndfield: CanCombineAnd[AnyField, AnyField, Fields] =
-    new CanCombineAnd[AnyField, AnyField, Fields] {
-      override def and[A](f: AnyField[A], g: AnyField[A]): Fields[A] = Filter.fields(f, g)
+  implicit val fieldAndfield: CanCombineAnd[Field, Field, Fields] =
+    new CanCombineAnd[Field, Field, Fields] {
+      override def and[A](f: Field[A], g: Field[A]): Fields[A] = Filter.fields(f, g)
     }
 
-  implicit val fieldsAndfield: CanCombineAnd[Fields, AnyField, Fields] =
-    new CanCombineAnd[Fields, AnyField, Fields] {
-      override def and[A](f: Fields[A], g: AnyField[A]): Fields[A] = f.add(g)
+  implicit val fieldsAndfield: CanCombineAnd[Fields, Field, Fields] =
+    new CanCombineAnd[Fields, Field, Fields] {
+      override def and[A](f: Fields[A], g: Field[A]): Fields[A] = f.add(g)
     }
 
-  implicit val fieldAndfields: CanCombineAnd[AnyField, Fields, Fields] = reversed(fieldsAndfield)
+  implicit val fieldAndfields: CanCombineAnd[Field, Fields, Fields] = reversed(fieldsAndfield)
 
   implicit val fieldsAndfields: CanCombineAnd[Fields, Fields, Fields] =
     new CanCombineAnd[Fields, Fields, Fields] {
